@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { Link, Head } from '@inertiajs/inertia-react';
-import Nav from "../Components/Nav"
+import Nav from '@/Components/Nav'
 import axios from 'axios';
 import Body from '@/Components/Body';
 import { Title } from '@/Components/Paragraph';
@@ -14,9 +14,6 @@ export default function Login(){
 
     let btnRef = useRef();
 
-    useEffect(()=>{
-        console.log(btnRef)
-    })
 
     const onButtonClick = ()=>{
         if(btnRef.current)

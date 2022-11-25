@@ -41,7 +41,7 @@ export function ContentParagraphBlack({children, className}){
     )
 }
 
-export function ContentParagraphBlackMedium({children, className}){
+export function ContentParagraphBlackMedium({children, className, key}){
     return (
         <p className={classNames("md:text-sm text-sm font-regular text-black tracking-wider w-full md:leading-2 leading-2 ",className)}>
             {children}

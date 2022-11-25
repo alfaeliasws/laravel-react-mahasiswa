@@ -11,7 +11,7 @@ export default function AssignMatkulComponent(){
     return (
             <div>
                 {
-                    isBusy === false 
+                    isBusy === false
                     ?
                     (
                         <div></div>
@@ -19,7 +19,6 @@ export default function AssignMatkulComponent(){
                     :
                     <div></div>
                 }
-                Assign Matkul
             </div>
     )
 }

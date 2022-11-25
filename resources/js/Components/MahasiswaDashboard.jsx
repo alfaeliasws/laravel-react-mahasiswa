@@ -1,0 +1,82 @@
+import { useConsoleLog } from "@/Helper/useConsoleLog";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { ContentH1, ContentH2, ContentH3, ContentParagraphBlack, ContentParagraphBlackMedium, MiniTextBlack } from "./Paragraph";
+import ArrayCheckComponent from "./ArrayCheckComponent";
+import LoadingComponent from "./LoadingComponent";
+
+export default function MahasiswaDashboard({data}){
+
+    const [isBusy, setIsBusy] = useState(true);
+    const [passedDown, setPassedDown] = useState(data)
+    const [dataUser, setDataUser] = useState([])
+
+    const [senin, setSenin] = useState([])
+    const [selasa, setSelasa] = useState([])
+    const [rabu, setRabu] = useState([])
+    const [kamis, setKamis] = useState([])
+    const [jumat, setJumat] = useState([])
+    const [count, setCount] = useState(0)
+
+    const fetchAll = async (loginId) => {
+        await axios.get(`/mydata/${loginId}`)
+        .then((response) => {
+            setDataUser(response.data)
+        }).then(() => {
+            const isSenin = dataUser.filter((item) => item.hari === "Senin")
+            setSenin(isSenin);
+            if(senin) setCount(count  + 1)
+
+            const isSelasa = dataUser.filter((item) => item.hari === "Selasa")
+            setSelasa(isSelasa);
+            if(selasa) setCount(count  + 1)
+
+            const isRabu = dataUser.filter((item) => item.hari === "Rabu")
+            setRabu(isRabu);
+            if(rabu) setCount(count  + 1)
+
+            const isKamis = dataUser.filter((item) => item.hari === "Kamis")
+            setKamis(isKamis);
+            if(kamis) setCount(count  + 1)
+
+            const isJumat = dataUser.filter((item) => item.hari === "Jumat")
+            setJumat(isJumat);
+            if(jumat) setCount(count  + 1)
+        })
+        .catch((error) => console.error(error.response.data))
+    }
+
+    useEffect(() => {
+        fetchAll(data.login_id)
+        if(count === 5) setIsBusy(false)
+    },[senin,selasa,rabu,kamis,jumat])
+
+    useEffect(() => {})
+
+    return (
+            <div>
+                {
+                    isBusy === false
+                    ?
+                    (
+                        <div>
+                            <div className="flex flex-wrap">
+                                <ContentH1 className="text-black w-full">{dataUser[0].name}</ContentH1>
+                                <MiniTextBlack>{dataUser[0].fakultas}, {dataUser[0].jurusan}, Semester {dataUser[0].semester_id}</MiniTextBlack>
+                            </div>
+                            <div className="mt-4">
+                                <ContentH2 className="text-black">Jadwal Kuliah</ContentH2>
+                                <ArrayCheckComponent passedState={senin}/>
+                                <ArrayCheckComponent passedState={selasa}/>
+                                <ArrayCheckComponent passedState={rabu}/>
+                                <ArrayCheckComponent passedState={kamis}/>
+                                <ArrayCheckComponent passedState={jumat}/>
+                            </div>
+                        </div>
+                    )
+                    :
+                    <LoadingComponent/>
+                }
+            </div>
+    )
+}

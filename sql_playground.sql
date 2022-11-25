@@ -110,3 +110,76 @@ INSERT INTO semester(`Semester`, `start_date`, `end_date`) VALUES
 (10, '2023-1-23', '2023-5-15'),
 (11, '2023-1-23', '2023-5-15'),
 (12, '2023-1-23', '2023-5-15');
+
+INSERT INTO jadwal(mata_kuliah_id,jumlahSKS,hari,waktu) VALUES
+ ('TNG3',3,'Kamis','10.15 - 12.30')
+,('LITE',3,'Kamis','13.00 - 14.30')
+,('HMST',2,'Jumat','13.00 - 14.30')
+,('LITE',2,'Rabu','13.00 - 13.45')
+,('PSKV',2,'Senin','13.00 - 14.30')
+,('PCST',3,'Senin','07.00 - 08.30')
+,('HMST',1,'Senin','13.00 - 13.45')
+,('GSTR',2,'Kamis','12.30 - 13.00')
+,('TRM2',2,'Jumat','10.15 - 12.30')
+,('AERO',2,'Senin','07.00 - 08.30')
+,('PRBM',4,'Kamis','10.15 - 12.30')
+,('EKSP',3,'Kamis','10.15 - 12.30')
+,('LGTA',5,'Selasa','13.45 - 15.15')
+,('NKR1',3,'Jumat','13.00 - 14.30')
+,('EKSP',2,'Rabu','09.45 - 10.15')
+,('LGSR',2,'Kamis','15.15 - 16.45')
+,('STRM',1,'Rabu','09.45 - 10.15')
+,('LGSR',2,'Jumat','15.15 - 16.45')
+,('TNG3',3,'Senin','12.30 - 13.00')
+,('EKM1',3,'Selasa','08.30 - 09.45')
+,('PSKV',2,'Jumat','12.30 - 13.00')
+,('LGDP',2,'Rabu','13.45 - 15.15')
+,('PGAR',2,'Selasa','08.30 - 09.45')
+,('PGAR',2,'Rabu','09.45 - 10.15')
+,('NKR1',3,'Rabu','13.00 - 13.45')
+,('TRM2',3,'Jumat','12.30 - 13.00')
+,('STRM',2,'Selasa','08.30 - 09.45')
+,('LGDP',2,'Selasa','13.45 - 15.15');
+
+CREATE TABLE assigned__mata__kuliah(
+   jadwal_id      INTEGER  NOT NULL PRIMARY KEY
+  ,mahasiswa_id   INTEGER  NOT NULL
+  ,semester_id    INTEGER  NOT NULL
+  ,fakultas_id    INTEGER  NOT NULL
+  ,jurusan_id     INTEGER  NOT NULL
+  ,mata_kuliah_id INTEGER  NOT NULL
+);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (22,26,12,1,1,18);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (24,41,10,1,2,19);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (30,41,10,1,2,19);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (3,29,12,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (21,29,12,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (21,35,10,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (3,40,10,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (3,42,9,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (3,48,9,2,4,20);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (11,49,9,3,7,21);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (28,49,9,3,7,21);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (12,43,9,3,11,22);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (15,36,10,4,13,23);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (4,30,11,4,14,24);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (6,30,11,4,14,24);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (5,31,11,5,16,25);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (9,50,9,5,16,25);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (7,38,10,6,18,26);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (23,38,10,6,18,26);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (14,33,10,6,19,27);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (17,33,10,6,19,27);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (13,39,10,7,22,28);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (16,32,11,7,25,29);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (27,32,11,7,25,29);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (8,34,10,8,26,30);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (8,37,10,8,26,30);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (8,46,9,8,26,30);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (18,44,9,9,33,31);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (20,44,9,9,33,31);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (19,28,12,10,34,32);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (25,47,9,10,34,33);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (26,28,12,10,34,32);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (29,47,9,10,34,33);
+INSERT INTO assigned__mata__kuliah(jadwal_id,mahasiswa_id,semester_id,fakultas_id,jurusan_id,mata_kuliah_id) VALUES (10,45,9,10,35,35);

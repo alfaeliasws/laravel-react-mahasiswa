@@ -38,7 +38,7 @@ export default function ShowComponent({data,  view, updatePass}){
 
         await axios.delete(`/deletemahasiswa/${deletedData}`)
         .then((response) => {
-            console.log("delete succees")
+            console.log("delete success")
         }).catch(error => console.error(error))
     }
 

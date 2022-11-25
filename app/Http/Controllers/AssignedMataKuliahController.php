@@ -25,7 +25,7 @@ class AssignedMataKuliahController extends Controller
         $assigned_query = DB::table('assigned__mata__kuliah as a')
                             ->select('m.name','a.mahasiswa_id','f.fakultas','a.fakultas_id','a.id',
                                         'a.semester_id','m.id_mahasiswa','j.jurusan','a.jurusan_id','mat.mata_kuliah','a.mata_kuliah_id as matkul_relation',
-                                        'mat.mata_kuliah_id','a.jadwal_id','jad.hari','jad.waktu','jad.jumlahSKS','mat.dosen_pengajar','mat.jumlahSKS')
+                                        'mat.mata_kuliah_id','a.jadwal_id','jad.hari','jad.waktu','jad.jumlahSKS','mat.dosen_pengajar','mat.jumlahSKS as target_sks')
                             ->leftJoin('fakultas as f','a.fakultas_id','=',"f.id")
                             ->leftJoin('jurusan as j','a.jurusan_id','=',"j.id")
                             ->leftJoin('mata_kuliah as mat','a.mata_kuliah_id','=',"mat.id")
@@ -85,9 +85,40 @@ class AssignedMataKuliahController extends Controller
      * @param  \App\Models\Assigned_Mata_Kuliah  $assigned_Mata_Kuliah
      * @return \Illuminate\Http\Response
      */
-    public function edit(Assigned_Mata_Kuliah $assigned_Mata_Kuliah)
+    public function edit($id)
     {
-        //
+
+        $edit_query = DB::table('assigned__mata__kuliah as a')
+        ->select('m.name','a.mahasiswa_id','f.fakultas','a.fakultas_id','a.id',
+                    'a.semester_id','m.id_mahasiswa','j.jurusan','a.jurusan_id','mat.mata_kuliah','a.mata_kuliah_id as matkul_relation',
+                    'mat.mata_kuliah_id','a.jadwal_id','jad.hari','jad.waktu','jad.jumlahSKS','mat.dosen_pengajar','mat.jumlahSKS')
+        ->leftJoin('fakultas as f','a.fakultas_id','=',"f.id")
+        ->leftJoin('jurusan as j','a.jurusan_id','=',"j.id")
+        ->leftJoin('mata_kuliah as mat','a.mata_kuliah_id','=',"mat.id")
+        ->leftJoin('jadwal as jad','a.jadwal_id','=',"jad.id")
+        ->leftJoin('mahasiswa as m','a.mahasiswa_id','=',"m.id")
+        ->where("a.id", $id)->get();
+
+        return response()->json($edit_query);
+    }
+
+
+    public function mydata($id)
+    {
+
+        $query = DB::table('assigned__mata__kuliah as a')
+        ->select('m.name','a.mahasiswa_id','f.fakultas','a.fakultas_id','a.id',
+                    'a.semester_id','m.id_mahasiswa','j.jurusan','a.jurusan_id','mat.mata_kuliah','a.mata_kuliah_id as matkul_relation',
+                    'mat.mata_kuliah_id','a.jadwal_id','jad.hari','jad.waktu','jad.jumlahSKS','mat.dosen_pengajar','mat.jumlahSKS as target_sks')
+        ->leftJoin('fakultas as f','a.fakultas_id','=',"f.id")
+        ->leftJoin('jurusan as j','a.jurusan_id','=',"j.id")
+        ->leftJoin('mata_kuliah as mat','a.mata_kuliah_id','=',"mat.id")
+        ->leftJoin('jadwal as jad','a.jadwal_id','=',"jad.id")
+        ->leftJoin('mahasiswa as m','a.mahasiswa_id','=',"m.id")
+        ->where("m.id_mahasiswa", $id)->get();
+
+        return response()->json($query);
+        // return response()->json("function working");
     }
 
     /**
@@ -97,9 +128,46 @@ class AssignedMataKuliahController extends Controller
      * @param  \App\Models\Assigned_Mata_Kuliah  $assigned_Mata_Kuliah
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Assigned_Mata_Kuliah $assigned_Mata_Kuliah)
+    public function update(Request $request, $id)
     {
-        //
+
+        $formFields=$request->validate([
+            "mahasiswa_id" => "required",
+            "fakultas_id" => "required",
+            "semester_id" => "required",
+            "jurusan_id" => "required",
+            "mata_kuliah_id" => "required",
+            "jadwal_id" => "required"
+        ]);
+
+        if(!$formFields)
+        {
+            return response()->json(
+            [
+                "function not working",
+                "status" => 422
+            ]);
+        }
+        else
+        {
+            $assigned = Assigned_Mata_Kuliah::find($id);
+
+            $assigned->mahasiswa_id = $request->mahasiswa_id;
+            $assigned->fakultas_id = $request->fakultas_id;
+            $assigned->semester_id = $request->semester_id;
+            $assigned->jurusan_id = $request->jurusan_id;
+            $assigned->mata_kuliah_id = $request->mata_kuliah_id;
+            $assigned->jadwal_id = $request->jadwal_id;
+            $assigned->save();
+
+            return response()->json(
+                [
+                    "edit berhasil",
+                    "status" => 200
+                ]
+                );
+        };
+
     }
 
     /**
@@ -108,8 +176,10 @@ class AssignedMataKuliahController extends Controller
      * @param  \App\Models\Assigned_Mata_Kuliah  $assigned_Mata_Kuliah
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Assigned_Mata_Kuliah $assigned_Mata_Kuliah)
+    public function destroy($id)
     {
-        //
+        DB::table('assigned__mata__kuliah')->where('id',$id)->delete();
+
+        return response()->json("delete succeed");
     }
 }

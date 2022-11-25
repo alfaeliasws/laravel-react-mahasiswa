@@ -6,6 +6,7 @@ import { ContentParagraphBlack, MiniTextBlack } from "./Paragraph"
 import { useState, useEffect, useRef } from "react"
 import { viewChanger } from "@/Helper/viewChanger"
 import { useVariableCatcher } from "@/Helper/useVariableCatcher"
+import LoadingComponent from "./LoadingComponent"
 
 export default function AdminDashboard({view, data}){
 
@@ -123,7 +124,7 @@ export default function AdminDashboard({view, data}){
                     <MiniTextBlack className="text-gray-500 text-sm">{data.user_data.position}</MiniTextBlack>
                     <MiniTextBlack className="text-gray-500 text-sm">{data.login_id}</MiniTextBlack>
                 </div>) :
-            <div></div>
+           <LoadingComponent/>
         }
         </div>
     )

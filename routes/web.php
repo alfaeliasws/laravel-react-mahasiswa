@@ -3,10 +3,10 @@
 use Inertia\Inertia;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\EnsureStudent;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewController;
-use App\Http\Middleware\EnsureLoggedOut;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\ProfileController;
@@ -27,7 +27,6 @@ use App\Http\Controllers\AssignedMataKuliahController;
 */
 
 Route::get('/', [ViewController::class,'welcome'])->middleware('guest');
-Route::get('/login', [UserController::class,'show_login_page'])->middleware(EnsureLoggedOut::class);
 Route::get('/dashboard', [ViewController::class,'dashboard'])->middleware('auth');
 Route::get('/homepage', [ViewController::class,'homepage'])->middleware('auth');
 
@@ -43,6 +42,12 @@ Route::put('/editmahasiswa/{id}', [MahasiswaController::class,'edit'])->middlewa
 Route::post('/createmahasiswa', [MahasiswaController::class,'store'])->middleware(EnsureAdmin::class);
 
 Route::post('/assignmatkul', [AssignedMataKuliahController::class,'store'])->middleware(EnsureAdmin::class);
+Route::delete('/deleterecord/{id}', [AssignedMataKuliahController::class,'destroy'])->middleware(EnsureAdmin::class);
+Route::get('/editedassign/{id}', [AssignedMataKuliahController::class,'edit'])->middleware(EnsureAdmin::class);
+Route::put('/editassignedmatakuliah/{id}', [AssignedMataKuliahController::class,'update'])->middleware(EnsureAdmin::class);
 
 Route::post('/authentication', [UserController::class,'authentication']);
 Route::post('/logout', [UserController::class,'logout'])->middleware('auth');
+Route::get('/login', [UserController::class,'show_login_page'])->middleware('guest');
+
+Route::get('/mydata/{id}', [AssignedMataKuliahController::class,'mydata'])->middleware(EnsureStudent::class);

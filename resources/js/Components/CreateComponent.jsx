@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import FormInputNumber from "./FormInputNumber"
 import FormInputText from "./FormInputText"
 import { MiniTextBlack } from "./Paragraph"
+import { ContentParagraphBlack } from "./Paragraph"
+import LoadingComponent from "./LoadingComponent"
 
 export default function Create({data}){
 
@@ -16,7 +18,7 @@ export default function Create({data}){
     const [optionFakultas, setOptionFakultas] = useState([])
     const [optionJurusan, setOptionJurusan] = useState([])
     const [isBusy, setIsBusy] = useState(true)
-    const [nimValidation, setNimValidataion] = useState("empty")
+    const [nimValidation, setNimValidation] = useState("empty")
 
     const fetchJurusan = async () => {
         await axios.get("/fetchjurusan").then(
@@ -113,11 +115,11 @@ export default function Create({data}){
         const checkFilter = data.filter((item) => item.login_id === value)
 
         if(checkFilter.length > 0){
-            setNimValidataion("validation rejected")
+            setNimValidation("validation rejected")
             setIdMahasiswa("")
         }
         if(checkFilter.length == 0){
-            setNimValidataion("validation approved")
+            setNimValidation("validation approved")
         }
 
     }
@@ -144,43 +146,48 @@ export default function Create({data}){
         }
 
         axios.post("/createmahasiswa",dataSet).then((response) => {
-            console.log(response)
+            setNimValidation("berhasil")
         }).catch((error)=> console.error(error.response.data.message))
     }
 
     return (
         isBusy === false ?
             <div>
-                <form onSubmit={submitHandler}>
-                    <FormInputText onChange={namaHandler} label="Nama" placeholder="Ketik Nama" value={name}/>
-                    <FormInputText label="Nomor Induk Mahasiswa" onBlur={checkValidation} onChange={idMahasiswaHandler} placeholder="Ketik NIM" value={idMahasiswa}/>
-                    {nimValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">NIM Tidak Tersedia</MiniTextBlack> : <div></div>}
-                    <FormInputText onChange={alamatHandler} label="Alamat" placeholder="Ketik Alamat" value={alamat}/>
-                    <FormInputNumber onChange={nomorTeleponHandler} label="Nomor Telepon" placeholder="Masukkan Nomor Telepon" value={nomorTelepon}/>
-                    {/* <FormInputText label="Fakultas" value={fakultas} onChange={fakultasHandler}/> */}
-                    <div className="flex flex-wrap">
-                        <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
-                        <select id="fakultasSelect" className="w-full rounded-md" defaultValue="initial" onFocus={refetchData} onChange={fakultasHandler}>
-                            <option value="initial">Pilih Fakultas</option>
-                            {optionFakultas.map((item) => {
-                                return <option value={item.value} key={item.value} >{item.label}</option>
-                            })}
-                        </select>
-                    </div>
-                    <div className="flex flex-wrap">
-                        <label htmlFor="jurusanSelect" className="w-full h-min-h">Jurusan</label>
-                        <select id="jurusanSelect" className="w-full rounded-md" defaultValue="initial" onChange={jurusanHandler}>
-                            <option value="initial">Pilih Jurusan</option>
-                            {optionJurusan.map((item) => {
-                                return <option value={item.value} key={item.value}>{item.label}</option>
-                            })}
-                        </select>
-                    </div>
-                    <FormInputNumber min={1} max={12} onChange={semesterHandler} label="Semester" placeholder="Ketik Semester" value={semester}/>
-                    <button onClick={e => onShowView("show")} className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg mr-2">Back</button>
-                    <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">Submit</button>
-                </form>
-            </div>  :
-            <div></div>
+                {
+                    nimValidation === "berhasil" ?
+                        <ContentParagraphBlack>Mahasiswa Berhasil Ditambahkan!</ContentParagraphBlack>
+                    :
+                    <form onSubmit={submitHandler}>
+                        <FormInputText onChange={namaHandler} label="Nama" placeholder="Ketik Nama" value={name}/>
+                        <FormInputText label="Nomor Induk Mahasiswa" onBlur={checkValidation} onChange={idMahasiswaHandler} placeholder="Ketik NIM" value={idMahasiswa}/>
+                        {nimValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">NIM Tidak Tersedia</MiniTextBlack> : <div></div>}
+                        <FormInputText onChange={alamatHandler} label="Alamat" placeholder="Ketik Alamat" value={alamat}/>
+                        <FormInputNumber onChange={nomorTeleponHandler} label="Nomor Telepon" placeholder="Masukkan Nomor Telepon" value={nomorTelepon}/>
+                        {/* <FormInputText label="Fakultas" value={fakultas} onChange={fakultasHandler}/> */}
+                        <div className="flex flex-wrap">
+                            <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
+                            <select id="fakultasSelect" className="w-full rounded-md" defaultValue="initial" onFocus={refetchData} onChange={fakultasHandler}>
+                                <option value="initial">Pilih Fakultas</option>
+                                {optionFakultas.map((item) => {
+                                    return <option value={item.value} key={item.value} >{item.label}</option>
+                                })}
+                            </select>
+                        </div>
+                        <div className="flex flex-wrap">
+                            <label htmlFor="jurusanSelect" className="w-full h-min-h">Jurusan</label>
+                            <select id="jurusanSelect" className="w-full rounded-md" defaultValue="initial" onChange={jurusanHandler}>
+                                <option value="initial">Pilih Jurusan</option>
+                                {optionJurusan.map((item) => {
+                                    return <option value={item.value} key={item.value}>{item.label}</option>
+                                })}
+                            </select>
+                        </div>
+                        <FormInputNumber min={1} max={12} onChange={semesterHandler} label="Semester" placeholder="Ketik Semester" value={semester}/>
+                        <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">Submit</button>
+                    </form>
+                }
+            </div>
+        :
+        <LoadingComponent/>
     )
 }

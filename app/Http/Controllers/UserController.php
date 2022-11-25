@@ -31,10 +31,10 @@ class UserController extends Controller
             "password" => "required"
         ]);
 
-        // $token =  JWTAuth::attempt($formFields);
-        $token =  auth()->guard('api')->attempt($formFields);
+        $token =  JWTAuth::attempt($formFields);
+        // $token =  auth()->guard('api')->attempt($formFields);
 
-        if(!$token)
+        if(!$token )
         {
             return response()->json([
                 "status"=>400,
@@ -45,8 +45,9 @@ class UserController extends Controller
         }
         else
         {
+            JWTAuth::setToken($token);
             Auth::attempt($formFields);
-
+            $request->session()->regenerate();
             return response()->json([
                 "status"=>200,
                 "message"=>"Login succeed",
@@ -62,12 +63,24 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        JWTAuth::invalidate($request->$accessToken);
-        $request->session()->flush();
-        $request->session()->regenerate();
-        Auth::logout();
 
-        return response()->json("Logout success");
+        $accessToken = $request->accessToken;
+
+        if($accessToken){;
+            JWTAuth::setToken($accessToken)->invalidate();
+            $request->session()->flush();
+            $request->session()->regenerate();
+            Auth::logout();
+            return response()->json(["with Token",$accessToken]);
+        }
+
+
+        if(!$accessToken){
+            $request->session()->flush();
+            $request->session()->regenerate();
+            Auth::logout();
+            return response()->json("Logout success");
+        }
 
         // return response()->json([
         //     "status"=>200,

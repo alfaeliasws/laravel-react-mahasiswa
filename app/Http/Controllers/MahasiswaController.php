@@ -140,7 +140,6 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-
         DB::table('mahasiswa')->where('id',$id)->delete();
 
         return response()->json([

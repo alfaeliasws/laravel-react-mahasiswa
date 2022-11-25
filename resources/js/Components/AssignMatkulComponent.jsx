@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import FormInputText from "./FormInputText";
-import { MiniTextBlack } from "./Paragraph";
+import { ContentParagraphBlack, MiniTextBlack } from "./Paragraph";
 import FormInputNumber from "./FormInputNumber";
+import LoadingComponent from "./LoadingComponent";
 
-export default function AssignMatkulComponent(){
+export default function AssignMatkulComponent({onShowView}){
 
     const [name, setName] = useState("")
     const [jurusan, setJurusan] = useState("")
@@ -11,7 +12,6 @@ export default function AssignMatkulComponent(){
     const [semester, setSemester] = useState(0)
     const [mataKuliah, setMataKuliah] = useState([])
     const [hari, setHari] = useState([])
-    const [jam, setJam] = useState([])
 
     const [isBusy, setIsBusy] = useState(true);
     const [nameValidation, setNameValidation] = useState("empty")
@@ -36,7 +36,9 @@ export default function AssignMatkulComponent(){
                 const hariArray = [...response.data.data].map((item) => {
                     return {
                         value: item.hari,
-                        label: item.hari                    }
+                        label: item.hari,
+                        key: item.id
+                    }
                 })
                 setOptionHari(hariArray)
 
@@ -238,16 +240,20 @@ export default function AssignMatkulComponent(){
         }
 
         axios.post("/assignmatkul",dataSet).then((response) => {
-            console.log(response)
+            setNameValidation("berhasil")
+            setName("")
         }).catch((error)=>console.error(error))
     }
 
     return (
             <div>
                 {
-                    isBusy === false 
+                    isBusy === false
                     ?
                     (
+                        nameValidation === "berhasil" ?
+                        <ContentParagraphBlack>Penambahan Jadwal Kuliah Berhasil!</ContentParagraphBlack>
+                        :
                         <div>
                             <form onSubmit={submitHandler}>
                                 <FormInputText onChange={namaHandler} onBlur={checkValidation} label="Nama" placeholder="Ketik Nama" value={name}/>
@@ -309,7 +315,7 @@ export default function AssignMatkulComponent(){
                                             <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue="initial" onBlur={fetchWaktuKuliah} onChange={hariHandler}>
                                                 <option value="initial">Pilih Hari</option>
                                                 {optionHari.map((item) => {
-                                                    return <option value={item.value} key={item.value}>{item.label}</option>
+                                                    return <option value={item.value} key={item.key}>{item.label}</option>
                                                 })}
                                             </select>
                                         </div>
@@ -329,7 +335,7 @@ export default function AssignMatkulComponent(){
                             </div>
                     )
                     :
-                    <div></div>
+                    <LoadingComponent/>
                 }
             </div>
     )

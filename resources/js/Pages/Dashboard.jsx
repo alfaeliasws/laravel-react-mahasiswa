@@ -7,6 +7,7 @@ import ActionContainer from '@/Components/ActionContainer';
 import AdminDashboard from '@/Components/AdminDashboard';
 import { useConsoleLog } from '@/Helper/useConsoleLog';
 import { viewChanger } from '@/Helper/viewChanger';
+import MahasiswaDashboard from '@/Components/MahasiswaDashboard';
 
 export default function Dashboard({user}){
 
@@ -15,7 +16,6 @@ export default function Dashboard({user}){
     const [adminView, setAdminView] = useState("")
 
     let is_admin = user.is_admin === 1 ? true : false;
-
 
     useEffect(()=>{
         if(mahasiswaController){
@@ -47,15 +47,19 @@ export default function Dashboard({user}){
             <ContentParagraph className="text-black">
                 {user.login_id}
             </ContentParagraph>
-            <div className='w-full'>
-                <div className="flex flex-wrap space-x-4 py-4">
-                    <button onClick={openMahasiswaView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">{!mahasiswaController ? "Mahasiswa" : "Dashboard"}</button>
-                    <button onClick={openMatkulView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 bg-blue-800 text-white border-none rounded-lg">{!matkulController ? "Mata Kuliah" : "Dashboard"}</button>
-                </div>
-            </div>
+            {
+                is_admin && (
+                    <div className='w-full'>
+                        <div className="flex flex-wrap space-x-4 py-4">
+                            <button onClick={openMahasiswaView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">{!mahasiswaController ? "Mahasiswa" : "Dashboard"}</button>
+                            <button onClick={openMatkulView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 bg-blue-800 text-white border-none rounded-lg">{!matkulController ? "Mata Kuliah" : "Dashboard"}</button>
+                        </div>
+                    </div>
+                )
+            }
             <ActionContainer>
                 {
-                    is_admin ? <AdminDashboard view={adminView} data={user} fetchData={adminView}/> : <div></div>
+                    is_admin ? <AdminDashboard view={adminView} data={user} fetchData={adminView}/> : <MahasiswaDashboard data={user}/>
                 }
             </ActionContainer>
         </BodyAuth>

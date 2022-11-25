@@ -1,8 +1,10 @@
 import NavItem from "./NavItem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "@inertiajs/inertia-react";
 
 export default function NavAuth(){
+
+    const [cookie, setCookie] = useState({});
 
     function deleteAllCookies() {
         var cookies = document.cookie.split(";");
@@ -24,24 +26,23 @@ export default function NavAuth(){
             return acc;
         }, {});
 
-    const cookie = parseCookie(document.cookie);
-
-    // const headers = {
-    //     'Authorization': `Bearer ${cookie.accessToken}`,
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json',
-    //     'X-Requested-With':'XMLHttpRequest'
-    // }
+    useEffect(()=>{
+        const cookieParsed = parseCookie(document.cookie);
+        if(cookieParsed.accessToken)
+        {
+            setCookie(cookieParsed)
+        }
+        else
+        {
+            setCookie({})
+        }
+    },[])
 
     const submit = async (e) => {
         e.preventDefault();
 
-        await axios.post("/logout",{accessToken: cookie.accessToken}
-        // {
-        //     headers: headers,
-        // }
-        )
-        .then(()=>{
+        await axios.post("/logout",{accessToken:cookie.accessToken})
+        .then((response)=>{
             deleteAllCookies();
             const host = window.location.host
             const domain = `http://${host}`
