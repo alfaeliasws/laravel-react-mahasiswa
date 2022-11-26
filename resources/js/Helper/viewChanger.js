@@ -1,10 +1,15 @@
-export function viewChanger(state, setState, type, e, value1, value2){
-    e.preventDefault();
+export function viewChanger(state, setState, type, e, value, value1, value2){
+    if(e) e.preventDefault();
 
-    if(type == "boolean")
+    if(type == "boolean" && !value)
     {
         if(state)setState(false);
         if(!state)setState(true);
+    }
+
+    if(type == "boolean" && value)
+    {
+        setState(value);
     }
 
     if(type == "string")

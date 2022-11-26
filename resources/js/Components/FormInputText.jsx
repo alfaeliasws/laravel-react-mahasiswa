@@ -1,3 +1,6 @@
+import { useConsoleLog } from "@/Helper/useConsoleLog";
+
+//input text component
 export default function FormInputText({label, placeholder, value, onChange, readOnly, onBlur}){
 
     if(!readOnly){

@@ -5,12 +5,17 @@ import { ContentH1, ContentH2, ContentH3, ContentParagraphBlack, ContentParagrap
 import ArrayCheckComponent from "./ArrayCheckComponent";
 import LoadingComponent from "./LoadingComponent";
 
+//dashboard mahasiswa
 export default function MahasiswaDashboard({data}){
 
+    //STATE
+    //if busy then loading component
     const [isBusy, setIsBusy] = useState(true);
-    const [passedDown, setPassedDown] = useState(data)
+
+    //store fetched data user from backend
     const [dataUser, setDataUser] = useState([])
 
+    //setState of jadwal
     const [senin, setSenin] = useState([])
     const [selasa, setSelasa] = useState([])
     const [rabu, setRabu] = useState([])
@@ -18,6 +23,7 @@ export default function MahasiswaDashboard({data}){
     const [jumat, setJumat] = useState([])
     const [count, setCount] = useState(0)
 
+    //FUNCTION FETCHER
     const fetchAll = async (loginId) => {
         await axios.get(`/mydata/${loginId}`)
         .then((response) => {
@@ -46,13 +52,14 @@ export default function MahasiswaDashboard({data}){
         .catch((error) => console.error(error.response.data))
     }
 
+    //RENDERER if there is any changes in state
     useEffect(() => {
         fetchAll(data.login_id)
         if(count === 5) setIsBusy(false)
     },[senin,selasa,rabu,kamis,jumat])
 
-    useEffect(() => {})
-
+    //returned components
+    //return loading component when busy
     return (
             <div>
                 {

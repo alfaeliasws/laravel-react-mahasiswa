@@ -1,18 +1,27 @@
 import { useConsoleLog } from "@/Helper/useConsoleLog"
+import { viewChanger } from "@/Helper/viewChanger"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import EditMatkulComponent from "./EditMatkulComponent"
 import LoadingComponent from "./LoadingComponent"
 import TableShowMatkul from "./TableShowMatkul"
 
-export default function ShowMatkulComponent(){
+export default function ShowMatkulComponent({openEditView, editMatkulView}){
 
+    //STATE
+    //if busy then loading component rendered
     const [isBusy, setIsBusy ] = useState(true)
-    const [currentView, setCurrentView] = useState("show")
+
+    //setCurrent view edit or show
+    const [currentView, setCurrentView] = useState(editMatkulView)
+
+    //setData to store in an array
     const [data,setData] = useState([])
-    const [isDelete, setIsDelete] = useState("none")
+
+    //store data that will be passed for editing
     const [editedData, setEditedData] = useState([])
 
+    //FUNCTION FETCHER
     const fetchMatkulData = async () => {
         axios.get("/fetchdatamatkul")
             .then((response) => {
@@ -21,16 +30,22 @@ export default function ShowMatkulComponent(){
             }).catch((error) => console.error(error))
     }
 
+    //RENDER in dependency of the passed editMatkulView and currentView
     useEffect(()=>{
         fetchMatkulData()
-        console.log(data)
-    },[])
+        setCurrentView(editMatkulView)
+    },[editMatkulView])
 
     useEffect(()=>{
-    },[isDelete === "false"])
+        setCurrentView(false)
+    },[])
 
+    //EVENT HANDLER
+    //if edit button clicked
     const onEdit = (e) => {
         e.preventDefault()
+
+        openEditView()
 
         axios.get(`/editedassign/${e.target.value}`).then(
             (response)  => {
@@ -41,13 +56,12 @@ export default function ShowMatkulComponent(){
         .then(() => {
             setIsBusy(false)})
         .then(() => {
-            setCurrentView("edit")})
+            viewChanger(currentView, setCurrentView, "boolean")})
         .catch((error) => console.error(error))
     }
 
+    //if delete function clicked
     async function onDelete (event) {
-        setIsDelete("true")
-
         event.preventDefault()
 
         const deletedData = event.target.value
@@ -60,7 +74,6 @@ export default function ShowMatkulComponent(){
 
         await axios.delete(`/deleterecord/${deletedData}`)
         .then((response) => {
-            setIsDelete("false")
         }).catch(error => console.error(error))
 
     }
@@ -74,7 +87,7 @@ export default function ShowMatkulComponent(){
             {
                 !isBusy ?
                 (
-                    currentView === "show"
+                    currentView === false
                     ?
                     <div className="overflow-x-auto overflow-scroll flex flex-wrap overflow-y-auto max-h-[500px]">
                         <TableShowMatkul header="true" target="Target SKS" hari="Hari" waktu="Waktu" className="min-h-min bg-slate-300 py-3" nama="Nama" nim="NIM" semester="Sem" fakultas="Fakultas" jurusan="Jurusan" mataKuliah="Nama Mata Kuliah" mataKuliahId="MKID" dosenPengajar="Dosen Pengajar" jumlahSKS="Jumlah SKS"/>
@@ -87,7 +100,7 @@ export default function ShowMatkulComponent(){
                     :
                     (
                         editedData.name &&
-                        <EditMatkulComponent onShowView={onShowView} data={editedData}/>
+                        <EditMatkulComponent onShowView={onShowView} openEditView={openEditView} data={editedData}/>
                     )
                 )
                 :

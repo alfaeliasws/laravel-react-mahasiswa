@@ -4,32 +4,46 @@ import { useEffect, useState } from "react"
 import { useVariableCatcher } from "@/Helper/useVariableCatcher";
 import EditComponent from "./EditComponent";
 import { viewChanger } from "@/Helper/viewChanger";
+import LoadingComponent from "./LoadingComponent";
 
-export default function ShowComponent({data,  view, updatePass}){
+//show mahasiswa
+export default function ShowComponent({data,  view, openEditView, editMahasiswaView, onShowView}){
 
+    //STATE
+    //where data of all mahasiswa stored
     const [dataMahasiswa,setDataMahasiswa] = useState([])
+
+    //store actions for refetching and rerender
     const [deleteAction, setDeleteAction] = useState(false);
+
+    //store data that is passed
     const [editPassedData, setEditPassedData] = useState({});
-    const [showView, setShowView] = useState(true);
-    const [inheritedView, setInheritedView] = useState(view)
 
-    const userDataArray = Object.entries(data.data)
-    let filteredData = [];
 
+    //RENDERER
+    //first render to view
+    useEffect(()=>{
+        onShowView()
+    },[])
+
+    //conditional renderer dependent to view, and editMahasiswaView and deleteAction
     useEffect(()=>{
         if(deleteAction == false){
-            setDataMahasiswa(userDataArray);
+            setDataMahasiswa(data.data);
         }
-    },[inheritedView])
+    },[view])
 
+
+    //EVENT HANDLER
     const deleteHandler = async (e) => {
 
         e.preventDefault()
 
         const deletedData = e.target.value
 
+        let filteredData = [];
         filteredData = dataMahasiswa.filter((item)=>{
-            return item[1].id != deletedData
+            return item.id != deletedData
         })
 
         setDeleteAction(true)
@@ -42,43 +56,39 @@ export default function ShowComponent({data,  view, updatePass}){
         }).catch(error => console.error(error))
     }
 
+    //set the state of above parents using openEditView() to change the state to edit
     const editHandler = item => e => {
         e.preventDefault()
-        setShowView(false)
-        setInheritedView("edit")
+        openEditView()
 
         const editedValue = item
         setEditPassedData(editedValue)
     }
 
-    const onShowView = (view) => {
-        if(view === "show")
-            {
-                setShowView(true)
-            }
-    }
-
-    const setterView = (view) => {
-        setInheritedView(view)
-    }
-
+    //returned html
+    //if the view is not edit then we show all the data mahasiswa
+    //if the view is edit then we edit the data
+    //no loading because there is no fetching in getting data displayed
     return (
+            dataMahasiswa ?
             <div>
-                { showView === true ?
+                { editMahasiswaView === false  ?
                 <div className="w-full flex flex-wrap">
                 {
                     dataMahasiswa.map((item,i) => {
                         return (
-                            <div className="md:w-3/12 sm:w-6/12 w-full" key={item[0]}>
-                                <div className="mx-2 flex flex-wrap shadow-2xl py-5 px-4 rounded-lg">
-                                    <div className="w-10/12">
-                                        <Card className="" data={item[1]} />
+                            <div className="w-full lg:w-1/5 md:w-4/12 " key={item.id}>
+                                <div className="mx-2 flex flex-wrap shadow-whitebg-medium h-[280px] pb-4 px-4 rounded-lg">
+                                    <div className="w-11/12 max-h-[250px] overflow-y-hidden">
+                                        <Card data={item} />
                                     </div>
-                                    <div className="min-w-min mr-3">
-                                        <button onClick={deleteHandler} value={item[1].id} className="bg-red-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60">Delete</button>
-                                    </div>
-                                    <div className="min-w-min">
-                                        <button className="bg-blue-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60" onClick={editHandler(item)}>Edit</button>
+                                    <div className="h-[60px] w-full flex">
+                                        <div className="w-6/12">
+                                            <button onClick={deleteHandler} value={item.id} className="bg-red-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60">Delete</button>
+                                        </div>
+                                        <div className="min-w-min">
+                                            <button className="bg-blue-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60" onClick={editHandler(item)}>Edit</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -87,8 +97,9 @@ export default function ShowComponent({data,  view, updatePass}){
                 }
                 </div>
                 :
-                <EditComponent  data={editPassedData} onShowView={onShowView} view={view} setterView={setterView} now={inheritedView}/>
+                <EditComponent  data={editPassedData} onShowView={onShowView} view={editMahasiswaView}/>
                 }
-            </div>
+            </div> :
+            <LoadingComponent></LoadingComponent>
     )
 }

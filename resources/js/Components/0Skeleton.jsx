@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-export default function AssignMatkulComponent(){
+
+//The skeleton of new project
+export default function ProjectName(){
 
     const [isBusy, setIsBusy] = useState(true);
 

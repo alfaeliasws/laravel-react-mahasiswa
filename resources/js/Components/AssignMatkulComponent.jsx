@@ -4,39 +4,48 @@ import { ContentParagraphBlack, MiniTextBlack } from "./Paragraph";
 import FormInputNumber from "./FormInputNumber";
 import LoadingComponent from "./LoadingComponent";
 
-export default function AssignMatkulComponent({onShowView}){
+//component of create form for matkul
+export default function AssignMatkulComponent(){
 
+    //if loading then the component wont be rendered
+    const [isBusy, setIsBusy] = useState(true);
+
+    //the state that store the onChange
     const [name, setName] = useState("")
     const [jurusan, setJurusan] = useState("")
     const [fakultas, setFakultas] = useState("")
     const [semester, setSemester] = useState(0)
-    const [mataKuliah, setMataKuliah] = useState([])
-    const [hari, setHari] = useState([])
+    const [selectedJadwal, setSelectedJadwal] = useState(0)
 
-    const [isBusy, setIsBusy] = useState(true);
+    //STATES
+    //to check the name and fill the data right away according to the name
     const [nameValidation, setNameValidation] = useState("empty")
-    const [selected, setSelected] = useState({})
-    const [dataMataKuliah, setDataMataKuliah] = useState([])
-    const [selectedMataKuliah, setSelectedMataKuliah] = useState({})
-    const [dataJadwalKuliah, setDataJadwalKuliah] = useState([])
-    const [selectedJadwal, setSelectedJadwal] = useState({})
 
+    //set selected data that is chosen
+    const [selected, setSelected] = useState({})
+
+    //store the data that is fetched
+    const [dataMataKuliah, setDataMataKuliah] = useState([])
+    const [dataMahasiswa, setDataMahasiswa] = useState([])
+
+    //set selected mataKuliah
+    const [selectedMataKuliah, setSelectedMataKuliah] = useState({})
+
+    //make the option of select HTML tags
     const [optionFakultas, setOptionFakultas] = useState([])
     const [optionJurusan, setOptionJurusan] = useState([])
-    const [dataMahasiswa, setDataMahasiswa] = useState([])
     const [optionMataKuliah, setOptionMataKuliah] = useState([])
     const [optionHari, setOptionHari] = useState([])
-    const [optionJam, setOptionJam] = useState([])
 
+    //FETCHER FUNCTION
+    //jadwal kuliah fetcher for Hari html select
     const fetchJadwalKuliah = async (id) => {
         await axios.get(`/fetchjadwal/${id}`).then(
             (response) => {
-                setDataJadwalKuliah(response.data.data)
 
                 const hariArray = [...response.data.data].map((item) => {
                     return {
-                        value: item.hari,
-                        label: item.hari,
+                        label: `${item.hari} ${item.waktu}`,
                         key: item.id
                     }
                 })
@@ -46,21 +55,7 @@ export default function AssignMatkulComponent({onShowView}){
             .catch((err) => console.error(err))
     }
 
-    const fetchWaktuKuliah = () => {
-        const jam = dataJadwalKuliah
-        .filter((item)=>{
-            return item.hari === hari
-        })
-        .map((item) => {
-        return {
-            value: item.waktu,
-            label: item.waktu                    }
-    })
-
-    setOptionJam(jam)
-    }
-
-
+    //mata kuliah fetcher for Mata Kuliah html select
     const fetchMataKuliah = async (id) => {
         await axios.get(`/fetchmatakuliah/${id}`).then(
             (response) => {
@@ -76,6 +71,7 @@ export default function AssignMatkulComponent({onShowView}){
             .catch((err) => console.error(err))
     }
 
+    //mata kuliah fetcher for Mahasiswa name checker
     const fetchMahasiswa = async () => {
         await axios.get("/fetchdatamahasiswa").then(
             (response) => {
@@ -85,6 +81,7 @@ export default function AssignMatkulComponent({onShowView}){
             .catch((err) => console.error(err?.response?.data.message))
     }
 
+    //jurusan fetcher for Jurusan html select setIsBusy false here
     const fetchJurusan = async () => {
         await axios.get("/fetchjurusan").then(
             (response) => {
@@ -100,6 +97,7 @@ export default function AssignMatkulComponent({onShowView}){
             .catch((err) => console.error(err?.response?.data.message))
     }
 
+    //fakultas fetcher for Fakultas html select
     const fetchFakultas = async () => {
         await axios.get("/fetchfakultas").then(
             (response) => {
@@ -115,11 +113,15 @@ export default function AssignMatkulComponent({onShowView}){
             .catch((err) => console.error(err?.response?.data.message))
     }
 
+    //STATE CHECK THEN RENDER IN STATE CHANGE
+    //fetching fakultas and mahasiswa
     useEffect(() => {
         fetchFakultas()
         fetchMahasiswa()
     },[])
 
+
+    //Function to refetch if there are a change in fakultas
     const refetchData = (e) => {
         e.preventDefault();
 
@@ -131,6 +133,8 @@ export default function AssignMatkulComponent({onShowView}){
         }
     }
 
+    //EVENT HANDLER
+    //event handlers of actions in rendered components
     const namaHandler = (e) => {
         e.preventDefault()
         setName(e.target.value)
@@ -142,6 +146,7 @@ export default function AssignMatkulComponent({onShowView}){
         setJurusan(e.target.value)
     }
 
+    //validate if name is in the database (if mahasiswa is not registered then matkul can't be assigned)
     const checkValidation = (e) => {
         e.preventDefault()
 
@@ -176,26 +181,11 @@ export default function AssignMatkulComponent({onShowView}){
 
         setFakultas(value)
 
-        const curatedOption = optionJurusan.filter((item) => {
-            if(value == 1){return item.value >= 1 && item.value <= 3}
-            if(value == 2){return item.value == 4}
-            if(value == 3){return item.value >= 5 && item.value <= 12}
-            if(value == 4){return item.value >= 13 && item.value <= 15}
-            if(value == 5){return item.value == 16}
-            if(value == 6){return item.value >= 17 && item.value <= 21}
-            if(value == 7){return item.value >= 22 && item.value <= 25}
-            if(value == 8){return item.value >= 26 && item.value <= 26}
-            if(value == 9){return item.value >= 27 && item.value <= 33}
-            if(value == 10){return item.value >= 34 && item.value <= 35}
-        })
-
-        setOptionJurusan(curatedOption)
-
     }
 
+    //show mata kuliah available for the Jurusan including fetching data kuliah
     const mataKuliahHandler = (e) => {
         e.preventDefault()
-        setMataKuliah(e.target.value)
 
         const selectedMataKuliahArray = dataMataKuliah.filter((item) => item.id == e.target.value)
 
@@ -207,26 +197,13 @@ export default function AssignMatkulComponent({onShowView}){
 
     const hariHandler = (e) => {
         e.preventDefault()
-        setHari(e.target.value)
+
+        const passedJadwal = parseInt(e.target.value)
+
+        setSelectedJadwal(passedJadwal)
     }
 
-    const jamHandler = (e) => {
-        e.preventDefault()
-
-        const filteredJadwal = dataJadwalKuliah.filter((item) => {
-            return (item.hari === hari && item.waktu === e.target.value)
-        })
-
-        if(filteredJadwal){
-            setSelectedJadwal(filteredJadwal[0])
-        }
-        else
-        {
-            console.log({check: filteredJadwal})
-        }
-
-    }
-
+    //Calling endpoint to store data
     const submitHandler = async (e) => {
         e.preventDefault()
 
@@ -236,7 +213,7 @@ export default function AssignMatkulComponent({onShowView}){
             fakultas_id: fakultas,
             jurusan_id: jurusan,
             mata_kuliah_id: selectedMataKuliah.id,
-            jadwal_id: selectedJadwal.id
+            jadwal_id: selectedJadwal
         }
 
         axios.post("/assignmatkul",dataSet).then((response) => {
@@ -255,6 +232,7 @@ export default function AssignMatkulComponent({onShowView}){
                         <ContentParagraphBlack>Penambahan Jadwal Kuliah Berhasil!</ContentParagraphBlack>
                         :
                         <div>
+                            <ContentParagraphBlack>Penambahan Jadwal Kuliah Mahasiswa</ContentParagraphBlack>
                             <form onSubmit={submitHandler}>
                                 <FormInputText onChange={namaHandler} onBlur={checkValidation} label="Nama" placeholder="Ketik Nama" value={name}/>
                                 {nameValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">Mahasiswa Tidak Ditemukan</MiniTextBlack> : <div></div>}
@@ -312,22 +290,14 @@ export default function AssignMatkulComponent({onShowView}){
                                         </div>
                                         <div className="flex flex-wrap">
                                             <label htmlFor="jadwalHariSelect" className="w-full h-min-h">Hari</label>
-                                            <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue="initial" onBlur={fetchWaktuKuliah} onChange={hariHandler}>
+                                            <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue="initial" onChange={hariHandler}>
                                                 <option value="initial">Pilih Hari</option>
                                                 {optionHari.map((item) => {
-                                                    return <option value={item.value} key={item.key}>{item.label}</option>
+                                                    return <option value={item.key} key={item.key}>{item.label}</option>
                                                 })}
                                             </select>
                                         </div>
-                                        <div className="flex flex-wrap">
-                                            <label htmlFor="jadwalJamSelect" className="w-full h-min-h">Jam</label>
-                                            <select id="jadwalJamSelect" className="w-full rounded-md" defaultValue="initial" onChange={jamHandler}>
-                                                <option value="initial">Pilih Jam</option>
-                                                {optionJam.map((item) => {
-                                                    return <option value={item.value} key={item.value}>{item.label}</option>
-                                                })}
-                                            </select>
-                                        </div>
+
                                         <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">Submit</button>
                                     </div>
                                 }

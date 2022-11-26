@@ -1,6 +1,7 @@
 import { useConsoleLog } from "@/Helper/useConsoleLog";
 import { MiniTextBlack } from "./Paragraph";
 
+//table showed for every day and every matakuliah assigned
 export default function TableShowMatkul({target, header, hari, waktu, className, jadwalId, nama, nim, semester, fakultas, jurusan, mataKuliah, mataKuliahId, jumlahSKS, dosenPengajar, data, onDelete, onEdit}){
 
     return (

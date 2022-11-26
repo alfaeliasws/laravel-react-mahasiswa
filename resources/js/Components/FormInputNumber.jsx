@@ -1,3 +1,4 @@
+//input number component
 export default function FormInputNumber({label, placeholder, value, onChange, min, max, readOnly}){
 
     if(!readOnly){

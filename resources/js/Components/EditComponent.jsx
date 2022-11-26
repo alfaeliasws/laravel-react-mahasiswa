@@ -3,25 +3,25 @@ import FormInputText from "./FormInputText"
 import FormInputNumber from "./FormInputNumber"
 import { viewChanger } from "@/Helper/viewChanger"
 import axios from "axios"
+import { ContentParagraphBlack } from "./Paragraph"
 
-export default function EditComponent({data, onShowView, view, setterView, now}){
+//component rendered to show edit form with passed data (no need to call api endpoint to get the data)
+export default function EditComponent({data, onShowView}){
 
+    //STATE
+    //storing data
+    const [validation, setValidation] = useState("empty")
+    const [name, setName] = useState(data.name)
+    const [alamat, setAlamat] = useState(data.alamat)
+    const [nomorTelepon, setNomorTelepon] = useState(data.nomor_telepon)
+    const [semester, setSemester] = useState(data.semester)
 
-    const [name, setName] = useState(data[1].name)
-    const [alamat, setAlamat] = useState(data[1].alamat)
-    const [nomorTelepon, setNomorTelepon] = useState(data[1].nomor_telepon)
-    const [semester, setSemester] = useState(data[1].semester)
+    // useEffect(()=>{
+    //     if(data)setDataValidator("true")
+    //     if(!data)onShowView()
+    // },[])
 
-    useEffect(()=>{
-
-        setterView(view)
-
-        if(now === "show"){
-            onShowView("show")
-        }
-    },[])
-
-
+    //EVENT HANDLERS
     const namaHandler = (e) => {
         e.preventDefault()
         setName(e.target.value)
@@ -43,10 +43,11 @@ export default function EditComponent({data, onShowView, view, setterView, now})
     }
 
 
+    //SUBMIT DATA AND PUT DATA TO DATABASE
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        const EditedData = e.target[8].value
+        const EditedData = e.target[7].value
 
         const dataSet = {
             name: name,
@@ -57,25 +58,29 @@ export default function EditComponent({data, onShowView, view, setterView, now})
 
         await axios.put(`/editmahasiswa/${EditedData}`, dataSet)
             .then((response) => {
-                if(response.data.status == 200){
-                    onShowView("show")
-                }
+                setValidation("validation approved")
+                    console.log("edit success")
             })
             .catch((error) => console.error(error))
 
     }
 
+    //returned data as edit form
     return (
+        validation === "validation approved" ?
+        <ContentParagraphBlack>Perbaikan Data Mahasiswa Berhasil</ContentParagraphBlack>
+        :
         <div>
             <form onSubmit={submitHandler}>
+                <ContentParagraphBlack>Edit Data Mahasiswa</ContentParagraphBlack>
                 <FormInputText onChange={namaHandler} label="Nama" placeholder="Edit Nama" value={name}/>
-                <FormInputText label="Nomor Induk Mahasiswa" placeholder="NIM" value={data[1].id_mahasiswa} readOnly={true}/>
+                <FormInputText label="Nomor Induk Mahasiswa" placeholder="NIM" value={data.id_mahasiswa} readOnly={true}/>
                 <FormInputText onChange={alamatHandler} label="Alamat" placeholder="Edit Alamat" value={alamat}/>
                 <FormInputNumber onChange={nomorTeleponHandler} label="Nomor Telepon" placeholder="Edit Nomor Telepon" value={nomorTelepon}/>
-                <FormInputText label="Fakultas" value={data[1].fakultas} readOnly={true}/>
-                <FormInputText label="Jurusan" value={data[1].jurusan} readOnly={true}/>
-                <FormInputNumber min={data[1].semester} max={12} onChange={semesterHandler} label="Semester" placeholder="Naik Semester" value={semester}/>
-                <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg" value={data[1].id}>Submit</button>
+                <FormInputText label="Fakultas" value={data.fakultas} readOnly={true}/>
+                <FormInputText label="Jurusan" value={data.jurusan} readOnly={true}/>
+                <FormInputNumber min={data.semester} max={12} onChange={semesterHandler} label="Semester" placeholder="Naik Semester" value={semester}/>
+                <button type="submit" className="py-2 text-xs sm:text-base mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 bg-blue-800 text-white border-none rounded-lg" value={data.id}>Submit</button>
             </form>
         </div>
     )

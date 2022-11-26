@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import React from "react";
 
-
+//paragraph items component
 export default function Paragraph({children, className}){
     let addClass = ""
 

@@ -3,13 +3,14 @@ import AssignMatkulComponent from "./AssignMatkulComponent"
 import ShowMatkulComponent from "./ShowMatkulComponent"
 import { useState, useEffect } from "react"
 
-export default function AdminMatkulView({view}) {
+//show matkul view to admin
+export default function AdminMatkulView({view, openEditView, editMatkulView}) {
 
     return (
         <div>
             {
                 view === "show" ?
-                <ShowMatkulComponent/>
+                <ShowMatkulComponent openEditView={openEditView} editMatkulView={editMatkulView} />
                 : <AssignMatkulComponent />
             }
         </div>

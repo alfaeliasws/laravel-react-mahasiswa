@@ -6,39 +6,36 @@ import { MiniTextBlack, ContentParagraphBlack } from "./Paragraph";
 import { useConsoleLog } from "@/Helper/useConsoleLog";
 import LoadingComponent from "./LoadingComponent";
 
-export default function EditMatkulComponent({data}){
+//component when edit matkul button is called
+export default function EditMatkulComponent({data, openEditView}){
 
-    const [editedData, setEditedData] = useState(data)
-
-    const [name, setName] = useState(data.name)
-    const [jurusan, setJurusan] = useState(data.jurusan_id)
-    const [fakultas, setFakultas] = useState(data.fakultas_id)
-    const [semester, setSemester] = useState(data.semester_id)
-    const [mataKuliah, setMataKuliah] = useState([])
-    const [hari, setHari] = useState([])
-
+    //STATE
+    //isBusy true is download
     const [isBusy, setIsBusy] = useState(true);
-    const [nameValidation, setNameValidation] = useState("empty")
-    const [selected, setSelected] = useState({})
-    const [dataMataKuliah, setDataMataKuliah] = useState([])
-    const [selectedMataKuliah, setSelectedMataKuliah] = useState({})
-    const [dataJadwalKuliah, setDataJadwalKuliah] = useState([])
-    const [selectedJadwal, setSelectedJadwal] = useState({})
 
-    const [dataMahasiswa, setDataMahasiswa] = useState([])
+    //validation
+    const [validation, setValidation] = useState("empty")
+
+    //all data mata kuliah
+    const [dataMataKuliah, setDataMataKuliah] = useState([])
+
+    //store selected jadwal and mata kuliah
+    const [selectedMataKuliah, setSelectedMataKuliah] = useState({})
+    const [selectedJadwal, setSelectedJadwal] = useState(0)
+
+    //store option
     const [optionMataKuliah, setOptionMataKuliah] = useState([])
     const [optionHari, setOptionHari] = useState([])
-    const [optionJam, setOptionJam] = useState([])
 
+
+    //FETCHER FUNCTIONS
     const fetchJadwalKuliah = async (id) => {
         await axios.get(`/fetchjadwal/${id}`).then(
             (response) => {
-                setDataJadwalKuliah(response.data.data)
 
                 const hariArray = [...response.data.data].map((item) => {
                     return {
-                        value: item.hari,
-                        label: item.hari,
+                        label: `${item.hari} ${item.waktu}`,
                         key: item.id
                     }
                 })
@@ -47,21 +44,6 @@ export default function EditMatkulComponent({data}){
             })
             .catch((err) => console.error(err))
     }
-
-    const fetchWaktuKuliah = () => {
-        const jam = dataJadwalKuliah
-        .filter((item)=>{
-            return item.hari === hari
-        })
-        .map((item) => {
-        return {
-            value: item.waktu,
-            label: item.waktu}
-    })
-
-    setOptionJam(jam)
-    }
-
 
     const fetchMataKuliah = async (id) => {
         await axios.get(`/fetchmatakuliah/${id}`).then(
@@ -79,21 +61,20 @@ export default function EditMatkulComponent({data}){
             .catch((err) => console.error(err))
     }
 
+
+    //RENDERER AND FETCHER CALL
     useEffect(() => {
-        if(editedData) {
-            setNameValidation("validation approved")
-            fetchMataKuliah(jurusan)
+        if(data) {
+            setValidation("validation approved")
+            fetchMataKuliah(data.jurusan_id)
         }
+        // if(!data) openEditView("showView")
     },[])
 
-    const namaHandler = (e) => {
-        e.preventDefault()
-        setName(e.target.value)
-    }
 
+    //EVENT HANDLER
     const mataKuliahHandler = (e) => {
         e.preventDefault()
-        setMataKuliah(e.target.value)
 
         const selectedMataKuliahArray = dataMataKuliah.filter((item) => item.id == e.target.value)
 
@@ -105,70 +86,63 @@ export default function EditMatkulComponent({data}){
 
     const hariHandler = (e) => {
         e.preventDefault()
-        setHari(e.target.value)
+
+        const passedJadwal = parseInt(e.target.value)
+
+        setSelectedJadwal(passedJadwal)
     }
 
-    const jamHandler = (e) => {
-        e.preventDefault()
 
-        const filteredJadwal = dataJadwalKuliah.filter((item) => {
-            return (item.hari === hari && item.waktu === e.target.value)
-        })
-
-        if(filteredJadwal){
-            setSelectedJadwal(filteredJadwal[0])
-        }
-        else
-        {
-            console.log({check: filteredJadwal})
-        }
-
-    }
-
+    //PUT DATA TO DATABASE
     const submitHandler = async (e) => {
         e.preventDefault()
 
         const dataSet = {
-            mahasiswa_id: editedData.mahasiswa_id,
-            semester_id: semester,
-            fakultas_id: fakultas,
-            jurusan_id: jurusan,
+            mahasiswa_id: data.mahasiswa_id,
+            semester_id: data.semester_id,
+            fakultas_id: data.fakultas_id,
+            jurusan_id: data.jurusan_id,
             mata_kuliah_id: selectedMataKuliah.id,
-            jadwal_id: selectedJadwal.id
+            jadwal_id: selectedJadwal
         }
 
-        axios.put(`/editassignedmatakuliah/${editedData.id}`,dataSet).then((response) => {
+        axios.put(`/editassignedmatakuliah/${data.id}`,dataSet).then((response) => {
             console.log(response)
-            setNameValidation("berhasil")
+            setValidation("berhasil")
         }).catch((error)=>console.error(error))
     }
 
+    //returned components
+    //return loading if the data is not there
+    //return form if the data passed accordingly and mata kuliah fetched
+    //return success announcement if data submission succeed
     return (
             <div>
                 {
-                    isBusy === false && editedData.name
+                    isBusy === false && data.name
                     ?
                     (
-                        nameValidation === "berhasil" ?
+                        validation === "berhasil" ?
                         <ContentParagraphBlack>Perbaikan Jadwal Kuliah Berhasil!</ContentParagraphBlack>
                         :
                         <div>
+                            <ContentParagraphBlack>Perbaikan Jadwal Mahasiswa</ContentParagraphBlack>
                             <form onSubmit={submitHandler}>
-                                <FormInputText onChange={namaHandler} label="Nama" placeholder="Ketik Nama" value={name}/>
+                                <FormInputText label="Nama" placeholder="Ketik Nama" value={data.name} readOnly={true}/>
                                 <div>
                                     <div className="flex flex-wrap">
                                         <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
-                                        <select id="fakultasSelect" className="w-full rounded-md" defaultValue={fakultas} >
-                                                <option value={fakultas} key={fakultas} >{data.fakultas}</option>
+                                        <select id="fakultasSelect" className="w-full rounded-md" defaultValue={data.fakultas_id} >
+                                                <option value={data.fakultas_id} key={data.fakultas_id} >{data.fakultas}</option>
                                         </select>
                                     </div>
                                     <div className="flex flex-wrap">
                                         <label htmlFor="jurusanSelect" className="w-full h-min-h">Jurusan</label>
-                                        <select id="jurusanSelect" className="w-full rounded-md" defaultValue= {jurusan}>
-                                                <option value={jurusan} key={jurusan} >{data.jurusan}</option>
+                                        <select id="jurusanSelect" className="w-full rounded-md" defaultValue= {data.jurusan_id}>
+                                                <option value={data.jurusan_id} key={data.jurusan_id} >{data.jurusan}</option>
                                         </select>
                                     </div>
-                                    <FormInputNumber label="Semester" placeholder="Semester" value={semester} readOnly={true}/>
+                                    <FormInputNumber label="Semester" placeholder="Semester" value={data.semester_id} readOnly={true}/>
                                     <div className="flex flex-wrap">
                                         <label htmlFor="mataKuliahSelect" className="w-full h-min-h">Mata Kuliah</label>
                                         <select id="mataKuliahSelect" className="w-full rounded-md" defaultValue="initial" onChange={mataKuliahHandler}>
@@ -181,23 +155,14 @@ export default function EditMatkulComponent({data}){
                                     </div>
                                     <div className="flex flex-wrap">
                                         <label htmlFor="jadwalHariSelect" className="w-full h-min-h">Hari</label>
-                                        <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue="initial" onBlur={fetchWaktuKuliah} onChange={hariHandler}>
+                                        <select id="jadwalHariSelect" className="flex w-full rounded-md" defaultValue="initial" onChange={hariHandler}>
                                             <option value="initial">Pilih Hari</option>
                                             {optionHari.map((item) => {
-                                                return <option value={item.value} key={item.key}>{item.label}</option>
+                                                return <option value={item.key} key={item.key}>{item.label}</option>
                                             })}
                                         </select>
                                     </div>
-                                    <div className="flex flex-wrap">
-                                        <label htmlFor="jadwalJamSelect" className="w-full h-min-h">Jam</label>
-                                        <select id="jadwalJamSelect" className="w-full rounded-md" defaultValue="initial" onChange={jamHandler}>
-                                            <option value="initial">Pilih Jam</option>
-                                            {optionJam.map((item) => {
-                                                return <option value={item.value} key={item.value}>{item.label}</option>
-                                            })}
-                                        </select>
-                                    </div>
-                                    <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">Submit</button>
+                                    <button type="submit" className="text-xs sm:text-base py-2 mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 bg-blue-800 text-white border-none rounded-lg">Submit</button>
                                 </div>
                                 </form>
                             </div>

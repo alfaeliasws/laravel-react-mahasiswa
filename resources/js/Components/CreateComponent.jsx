@@ -6,8 +6,17 @@ import { MiniTextBlack } from "./Paragraph"
 import { ContentParagraphBlack } from "./Paragraph"
 import LoadingComponent from "./LoadingComponent"
 
+//Form to create mahasiswa
 export default function Create({data}){
 
+    //STATE
+    //if busy then loading
+    const [isBusy, setIsBusy] = useState(true)
+
+    //make sure that the nim is unique if not unique then the validation will be rejected
+    const [nimValidation, setNimValidation] = useState("empty")
+
+    //The state of stored data in forms
     const [name, setName] = useState("")
     const [idMahasiswa, setIdMahasiswa] = useState("")
     const [alamat, setAlamat] = useState("")
@@ -15,11 +24,14 @@ export default function Create({data}){
     const [semester, setSemester] = useState("")
     const [jurusan, setJurusan] = useState("")
     const [fakultas, setFakultas] = useState("")
+
+    //store the option for select html tag
     const [optionFakultas, setOptionFakultas] = useState([])
     const [optionJurusan, setOptionJurusan] = useState([])
-    const [isBusy, setIsBusy] = useState(true)
-    const [nimValidation, setNimValidation] = useState("empty")
 
+
+    //FETCHER FUNCTION
+    //fetcher include setBusy false to start rendering the forms
     const fetchJurusan = async () => {
         await axios.get("/fetchjurusan").then(
             (response) => {
@@ -50,15 +62,20 @@ export default function Create({data}){
             .catch((err) => console.error(err?.response?.data.message))
     }
 
+    //RENDER AND DATA
+    //render at first after fetching data succeeed
     useEffect(()=>{
         fetchFakultas();
     },[])
 
+    //refetching data
     const refetchData = (e) => {
         e.preventDefault();
         fetchJurusan()
     }
 
+
+    //EVENT HANDLER
     const namaHandler = (e) => {
         e.preventDefault()
         setName(e.target.value)
@@ -84,6 +101,7 @@ export default function Create({data}){
         setJurusan(e.target.value)
     }
 
+    //fetching data and set options for jurusan
     const fakultasHandler = async (e) => {
         e.preventDefault()
 
@@ -108,6 +126,7 @@ export default function Create({data}){
 
     }
 
+    //check validation of NIM
     const checkValidation = (e) => {
         e.preventDefault()
 
@@ -132,6 +151,7 @@ export default function Create({data}){
         setIdMahasiswa(value)
     }
 
+    //POST DATA TO ENDPOINT
     const submitHandler = async (e) => {
         e.preventDefault()
 
@@ -150,9 +170,14 @@ export default function Create({data}){
         }).catch((error)=> console.error(error.response.data.message))
     }
 
+    //returned component that will be rendered
+    //return loading if the data is not fetched
+    //return form if the data is fetched
+    //return success announcement if data submission succeed
     return (
         isBusy === false ?
             <div>
+                <ContentParagraphBlack>Tambah Data Mahasiswa</ContentParagraphBlack>
                 {
                     nimValidation === "berhasil" ?
                         <ContentParagraphBlack>Mahasiswa Berhasil Ditambahkan!</ContentParagraphBlack>
@@ -183,7 +208,7 @@ export default function Create({data}){
                             </select>
                         </div>
                         <FormInputNumber min={1} max={12} onChange={semesterHandler} label="Semester" placeholder="Ketik Semester" value={semester}/>
-                        <button type="submit" className="mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">Submit</button>
+                        <button type="submit" className="py-2 text-xs sm:text-base mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 bg-blue-800 text-white border-none rounded-lg">Submit</button>
                     </form>
                 }
             </div>

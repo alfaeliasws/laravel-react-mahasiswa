@@ -30,6 +30,7 @@ export default function Dashboard({user}){
     // useConsoleLog(adminView)
 
     const openMahasiswaView = (e) =>{
+        if(e) e.preventDefault()
         viewChanger(mahasiswaController, setMahasiswaController, "boolean" ,e);
         setMatkulController(false)
     }
@@ -50,9 +51,9 @@ export default function Dashboard({user}){
             {
                 is_admin && (
                     <div className='w-full'>
-                        <div className="flex flex-wrap space-x-4 py-4">
-                            <button onClick={openMahasiswaView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 py-1 bg-blue-800 text-white border-none rounded-lg">{!mahasiswaController ? "Mahasiswa" : "Dashboard"}</button>
-                            <button onClick={openMatkulView} className="shadow-2xl hover:bg-blue-900 md:w-2/12 w-4/12 md:py-2 bg-blue-800 text-white border-none rounded-lg">{!matkulController ? "Mata Kuliah" : "Dashboard"}</button>
+                        <div className="flex md:flex-wrap space-x-4 py-4">
+                            <button onClick={openMahasiswaView} className="text-xs sm:text-base shadow-2xl hover:bg-blue-900 md:w-2/12 sm:w-4/12 w-6/12 py-2 bg-blue-800 text-white border-none rounded-lg">{!mahasiswaController ? "Mahasiswa" : "Dashboard"}</button>
+                            <button onClick={openMatkulView} className="py-2 text-xs sm:text-base shadow-2xl hover:bg-blue-900 md:w-2/12 sm:w-4/12 w-6/12 bg-blue-800 text-white border-none rounded-lg">{!matkulController ? "Mata Kuliah" : "Dashboard"}</button>
                         </div>
                     </div>
                 )

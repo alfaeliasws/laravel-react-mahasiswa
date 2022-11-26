@@ -3,6 +3,7 @@ import React from "react";
 import classNames from "classnames";
 import { ContentParagraph } from "./Paragraph";
 
+//nav item of the nav auth component
 export default function NavItem({ href, children, className }){
     return (
         <li className={classNames(className)}>

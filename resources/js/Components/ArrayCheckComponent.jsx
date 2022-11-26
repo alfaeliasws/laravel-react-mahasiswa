@@ -2,6 +2,7 @@ import { useConsoleLog } from "@/Helper/useConsoleLog"
 import { useEffect, useState } from "react"
 import { ContentParagraphBlack, ContentParagraphBlackMedium, ContentParagraphBlackSmall } from "./Paragraph"
 
+//item that is shown to mahasiswa as jadwal
 export default function ArrayCheckComponent(passedState)
 {
 
@@ -14,8 +15,8 @@ export default function ArrayCheckComponent(passedState)
                     {
                         data.map((item) => {
                             return (
-                                <div key={item.id}>
-                                    <ContentParagraphBlackMedium >{item.mata_kuliah} - {item.mata_kuliah_id}</ContentParagraphBlackMedium>
+                                <div className="mb-3" key={item.id}>
+                                    <ContentParagraphBlackMedium className="font-bold">{item.mata_kuliah} - {item.mata_kuliah_id}</ContentParagraphBlackMedium>
                                     <ContentParagraphBlackSmall >Jumlah SKS - {item.jumlahSKS}</ContentParagraphBlackSmall>
                                     <ContentParagraphBlackSmall >Target SKS - {item.target_sks}</ContentParagraphBlackSmall>
                                     <ContentParagraphBlackSmall >{item.waktu}</ContentParagraphBlackSmall>

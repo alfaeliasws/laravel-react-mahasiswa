@@ -1,6 +1,7 @@
 import NavItem from "./NavItem";
 import React, { useState } from "react";
 
+// nav component for unauthed user
 export default function Nav(){
 
     return (

@@ -1,3 +1,4 @@
+//skeleton of button
 export default function Button({type, onClick, children}){
 
     return (
