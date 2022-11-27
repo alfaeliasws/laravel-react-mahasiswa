@@ -1,3 +1,4 @@
+//SKELETON
 import { useConsoleLog } from "@/Helper/useConsoleLog";
 
 //input text component

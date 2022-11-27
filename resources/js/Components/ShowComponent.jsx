@@ -1,10 +1,9 @@
-import { useConsoleLog } from "@/Helper/useConsoleLog"
 import Card from "./Card"
 import { useEffect, useState } from "react"
-import { useVariableCatcher } from "@/Helper/useVariableCatcher";
 import EditComponent from "./EditComponent";
-import { viewChanger } from "@/Helper/viewChanger";
 import LoadingComponent from "./LoadingComponent";
+
+//PARENT COMPONENT Dashboard -> AdminDashboard -> AdminMahasiswaView
 
 //show mahasiswa
 export default function ShowComponent({data,  view, openEditView, editMahasiswaView, onShowView}){
@@ -52,7 +51,7 @@ export default function ShowComponent({data,  view, openEditView, editMahasiswaV
 
         await axios.delete(`/deletemahasiswa/${deletedData}`)
         .then((response) => {
-            console.log("delete success")
+            console.log(response)
         }).catch(error => console.error(error))
     }
 
@@ -83,11 +82,11 @@ export default function ShowComponent({data,  view, openEditView, editMahasiswaV
                                         <Card data={item} />
                                     </div>
                                     <div className="h-[60px] w-full flex">
-                                        <div className="w-6/12">
-                                            <button onClick={deleteHandler} value={item.id} className="bg-red-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60">Delete</button>
+                                        <div className="w-4/12">
+                                            <button className="hover:text-sm bg-blue-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60 transition-all" onClick={editHandler(item)}>Edit</button>
                                         </div>
                                         <div className="min-w-min">
-                                            <button className="bg-blue-600 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:opacity-60" onClick={editHandler(item)}>Edit</button>
+                                            <button onClick={deleteHandler} value={item.id} className="bg-red-600 hover:bg-red-800 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:saturate-200 transition-all hover:text-sm">Delete</button>
                                         </div>
                                     </div>
                                 </div>

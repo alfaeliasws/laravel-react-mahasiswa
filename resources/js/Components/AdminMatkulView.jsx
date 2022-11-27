@@ -3,6 +3,8 @@ import AssignMatkulComponent from "./AssignMatkulComponent"
 import ShowMatkulComponent from "./ShowMatkulComponent"
 import { useState, useEffect } from "react"
 
+//Parent COMPONENT Dashboard -> AdminDashboard
+
 //show matkul view to admin
 export default function AdminMatkulView({view, openEditView, editMatkulView}) {
 

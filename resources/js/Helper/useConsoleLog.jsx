@@ -6,3 +6,10 @@ export function useConsoleLog(...variable){
     })
     return;
 }
+
+export function useConsoleLogWatcher(dependency){
+    useEffect(()=>{
+        console.log(dependency)
+    },[dependency])
+    return
+}

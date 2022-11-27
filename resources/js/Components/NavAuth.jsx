@@ -1,3 +1,5 @@
+//COMPONENT
+
 import NavItem from "./NavItem";
 import React, { useEffect, useState } from "react";
 import { Link } from "@inertiajs/inertia-react";

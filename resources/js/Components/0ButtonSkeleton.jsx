@@ -1,3 +1,5 @@
+//SKELETON
+
 //skeleton of button
 export default function Button({type, onClick, children}){
 

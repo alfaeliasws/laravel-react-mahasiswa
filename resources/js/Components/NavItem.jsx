@@ -1,3 +1,5 @@
+//COMPONENT
+
 import { Link } from "@inertiajs/inertia-react";
 import React from "react";
 import classNames from "classnames";

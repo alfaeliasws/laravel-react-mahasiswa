@@ -2,6 +2,8 @@ import ShowComponent from "./ShowComponent"
 import CreateComponent from "./CreateComponent"
 import { useConsoleLog } from "@/Helper/useConsoleLog"
 
+//Parent COMPONENT AdminDashboard
+
 //component to show mahasiswa view
 export default function AdminMahasiswaView({view, data, openEditView, editMahasiswaView, onShowView, fetchDataMahasiswa}) {
 

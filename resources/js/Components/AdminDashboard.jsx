@@ -8,6 +8,8 @@ import { viewChanger } from "@/Helper/viewChanger"
 import { useVariableCatcher } from "@/Helper/useVariableCatcher"
 import LoadingComponent from "./LoadingComponent"
 
+// Parent COMPONENT Dashboard
+
 //Dashbord shown by admin and where the state of the view controlled
 export default function AdminDashboard({view, data}){
 

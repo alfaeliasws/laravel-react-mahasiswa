@@ -5,7 +5,10 @@ import FormInputText from "./FormInputText"
 import { MiniTextBlack } from "./Paragraph"
 import { ContentParagraphBlack } from "./Paragraph"
 import LoadingComponent from "./LoadingComponent"
+import randomPassword from "@/Helper/randomPassword"
+import { useConsoleLogWatcher } from "@/Helper/useConsoleLog"
 
+//PARENT COMPONENT Dashboard -> AdminDashboard -> AdminMahasiswaView
 //Form to create mahasiswa
 export default function Create({data}){
 
@@ -24,6 +27,7 @@ export default function Create({data}){
     const [semester, setSemester] = useState("")
     const [jurusan, setJurusan] = useState("")
     const [fakultas, setFakultas] = useState("")
+    const [password, setPassword] = useState()
 
     //store the option for select html tag
     const [optionFakultas, setOptionFakultas] = useState([])
@@ -66,7 +70,11 @@ export default function Create({data}){
     //render at first after fetching data succeeed
     useEffect(()=>{
         fetchFakultas();
+
+        setPassword(randomPassword())
     },[])
+
+    useConsoleLogWatcher(password)
 
     //refetching data
     const refetchData = (e) => {
@@ -99,6 +107,11 @@ export default function Create({data}){
     const jurusanHandler = (e) => {
         e.preventDefault()
         setJurusan(e.target.value)
+    }
+
+    const passwordHandler = (e) => {
+        e.preventDefault()
+        setPassword(e.target.value)
     }
 
     //fetching data and set options for jurusan
@@ -163,6 +176,7 @@ export default function Create({data}){
             fakultas_id: fakultas,
             semester_id: semester,
             nomor_telepon: nomorTelepon,
+            password: password
         }
 
         axios.post("/createmahasiswa",dataSet).then((response) => {
@@ -208,6 +222,7 @@ export default function Create({data}){
                             </select>
                         </div>
                         <FormInputNumber min={1} max={12} onChange={semesterHandler} label="Semester" placeholder="Ketik Semester" value={semester}/>
+                        <FormInputText onChange={passwordHandler} label="Password" placeholder="Masukkan Password" value={password}/>
                         <button type="submit" className="py-2 text-xs sm:text-base mt-2 shadow-2xl hover:bg-blue-900 md:w-2/12 w-3/12 bg-blue-800 text-white border-none rounded-lg">Submit</button>
                     </form>
                 }

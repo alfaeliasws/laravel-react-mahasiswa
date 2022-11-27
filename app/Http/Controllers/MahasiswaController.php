@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class MahasiswaController extends Controller
 {
@@ -60,9 +62,29 @@ class MahasiswaController extends Controller
             "fakultas_id" => "required"
         ]);
 
-        $user = Mahasiswa::create($formFields);
+        $user_create=$request->validate([
+            "id_mahasiswa" => "required",
+            "password" => "required"
+        ]);
 
-        return response()->json("creation successful");
+        if($formFields && $user_create){
+            $user = Mahasiswa::create($formFields);
+
+            $user = new User;
+
+            $user->login_id = $request->id_mahasiswa;
+            $user->password = Hash::make($request->password);
+            $user->is_admin = 0;
+            $user->save();
+
+            return response()->json("creation successful");
+        }
+        else{
+            return response()->json("error ocurred");
+        }
+
+
+
     }
 
     /**
@@ -92,16 +114,22 @@ class MahasiswaController extends Controller
             "nomor_telepon" => "required"
         ]);
 
+        $user_create=$request->validate([
+            "id_mahasiswa" => "required",
+        ]);
+
+
         if(!$formFields)
         {
             return response()->json(
-            [
-                "function not working",
-                "status" => 422
-            ]);
-        }
-        else
-        {
+                [
+                    "function not working",
+                    "status" => 422
+                ]);
+            }
+            else
+            {
+            $id_mahasiswa = $request->id_mahasiswa;
             $mahasiswa = Mahasiswa::find($id);
 
             $mahasiswa->name = $request->name;
@@ -110,14 +138,33 @@ class MahasiswaController extends Controller
             $mahasiswa->nomor_telepon = $request->nomor_telepon;
             $mahasiswa->save();
 
-            return response()->json(
-                [
-                    "edit berhasil",
-                    "status" => 200
-                ]
-                );
+            $user = User::where('login_id',$id_mahasiswa)->first();
+            if($request->password)
+            {
+                $user->password = Hash::make($request->password);
+                $user->save();
+                return response()->json(
+                    [
+                        "edit berhasil",
+                        "status" => 200
+                    ]
+                    );
+            }
+            else
+            {
+                return response()->json(
+                    [
+                        "edit berhasil no password changed",
+                        "status" => 200
+                    ]
+                    );
+            }
+
         };
 
+            // return response()->json(
+            //     $request
+            // );
     }
 
     /**
@@ -140,11 +187,15 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
+        $mahasiswa = DB::table('mahasiswa')->where('id',$id)->first();
+
+        $user = DB::table('users')->where('login_id',$mahasiswa->id_mahasiswa)->delete();
+
         DB::table('mahasiswa')->where('id',$id)->delete();
 
         return response()->json([
             "message"=>"function working",
-            "deleted user" => $id,
+            "deleted user" => $mahasiswa,
         ]);
     }
 }

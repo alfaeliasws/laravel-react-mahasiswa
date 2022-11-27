@@ -5,6 +5,8 @@ import { ContentH1, ContentH2, ContentH3, ContentParagraphBlack, ContentParagrap
 import ArrayCheckComponent from "./ArrayCheckComponent";
 import LoadingComponent from "./LoadingComponent";
 
+//Parent COMPONENT Dashboard
+
 //dashboard mahasiswa
 export default function MahasiswaDashboard({data}){
 

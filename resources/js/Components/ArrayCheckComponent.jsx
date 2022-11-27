@@ -2,6 +2,8 @@ import { useConsoleLog } from "@/Helper/useConsoleLog"
 import { useEffect, useState } from "react"
 import { ContentParagraphBlack, ContentParagraphBlackMedium, ContentParagraphBlackSmall } from "./Paragraph"
 
+//Parent COMPONENT Dashboard -> MahasiswaDashboard
+
 //item that is shown to mahasiswa as jadwal
 export default function ArrayCheckComponent(passedState)
 {

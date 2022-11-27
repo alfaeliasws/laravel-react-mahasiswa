@@ -2,6 +2,8 @@ import { useConsoleLog } from "@/Helper/useConsoleLog"
 import classNames from "classnames"
 import { ContentParagraphBlackMedium, ContentParagraphBlackSmall } from "./Paragraph"
 
+//PARENT COMPONENT Dashboard -> AdminDashboard -> AdminMahasiswaView -> ShowComponent
+
 //Component fo card that is shown to admin
 export default function Card({data, className}){
 

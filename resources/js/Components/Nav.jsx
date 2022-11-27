@@ -1,3 +1,5 @@
+//COMPONENT
+
 import NavItem from "./NavItem";
 import React, { useState } from "react";
 

@@ -1,3 +1,5 @@
+//COMPONENT
+
 import { ContentParagraphBlack } from "./Paragraph";
 
 //loading component with bounce animation

@@ -39,7 +39,7 @@ class UserController extends Controller
             return response()->json([
                 "status"=>400,
                 "message"=>"Login not succeed",
-                "next"=>"/"
+                "next"=>"/login"
             ]);
 
         }
@@ -93,32 +93,5 @@ class UserController extends Controller
         //     ]
         // ]);
 
-        // $this->validate($request->$accessToken, ['token' => 'required']);
-        // try {
-        //     JWTAuth::invalidate($request->$accessToken);
-        //     return response()->json(['success' => true]);
-        // } catch (JWTException $e) {
-        //     return response()->json(['success' => false, 'error' => 'Failed to logout, please try again.'], 500);
-        // }
-
-        // $logout_guard = $this->guard()->logout();
-        // $request_flush = $request->session()->flush();
-        // $request_session = $request->session()->regenerate();
-
-        // if($logout_guard && $request_flush && $request_session){
-        //     return response()->json([
-        //         "status"=>200,
-        //         "message"=>"Logout succeed",
-        //         "next"=>"/"
-        //     ]);
-        // }
-        // else
-        // {
-        //     return response()->json([
-        //         "status"=>400,
-        //         "message"=>"Logout unsuccessful",
-        //         "next"=>"/dashboard"
-        //     ]);
-        // }
     }
 }

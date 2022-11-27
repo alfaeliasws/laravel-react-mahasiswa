@@ -6,6 +6,7 @@ import EditMatkulComponent from "./EditMatkulComponent"
 import LoadingComponent from "./LoadingComponent"
 import TableShowMatkul from "./TableShowMatkul"
 
+//Parent COMPONENT Dashboard -> AdminDashboard -> AdminMatkulView
 export default function ShowMatkulComponent({openEditView, editMatkulView}){
 
     //STATE

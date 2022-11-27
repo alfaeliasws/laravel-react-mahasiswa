@@ -4,6 +4,8 @@ import { ContentParagraphBlack, MiniTextBlack } from "./Paragraph";
 import FormInputNumber from "./FormInputNumber";
 import LoadingComponent from "./LoadingComponent";
 
+//Parent COMPONENT Dashboard -> AdminDashboard ->  AdminMatkulView
+
 //component of create form for matkul
 export default function AssignMatkulComponent(){
 

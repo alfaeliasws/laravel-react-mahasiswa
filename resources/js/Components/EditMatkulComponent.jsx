@@ -6,6 +6,8 @@ import { MiniTextBlack, ContentParagraphBlack } from "./Paragraph";
 import { useConsoleLog } from "@/Helper/useConsoleLog";
 import LoadingComponent from "./LoadingComponent";
 
+//Parent COMPONENT Dashboard -> AdminDashboard -> AdminMatkulView -> ShowMatkulComponent
+
 //component when edit matkul button is called
 export default function EditMatkulComponent({data, openEditView}){
 

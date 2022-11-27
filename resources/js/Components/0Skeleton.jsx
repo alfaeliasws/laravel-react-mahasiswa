@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+//SKELETON
 
+import { useEffect, useState } from "react";
 
 //The skeleton of new project
 export default function ProjectName(){
