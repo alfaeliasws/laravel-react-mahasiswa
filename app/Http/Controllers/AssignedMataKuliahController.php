@@ -63,6 +63,10 @@ class AssignedMataKuliahController extends Controller
             "jadwal_id" => "required"
         ]);
 
+        $prev_id = DB::table('assigned__mata__kuliah')->select('id')->latest('id')->first();
+        $id = $prev_id->id + 1;
+        $formFields["id"] = $id;
+
         $assign = Assigned_Mata_Kuliah::create($formFields);
 
         return response()->json("success");

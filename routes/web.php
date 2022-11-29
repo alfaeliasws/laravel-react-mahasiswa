@@ -26,11 +26,12 @@ use App\Http\Controllers\AssignedMataKuliahController;
 |
 */
 
+
 Route::get('/', [ViewController::class,'welcome'])->middleware('guest');
 Route::get('/dashboard', [ViewController::class,'dashboard'])->middleware('auth');
 Route::get('/homepage', [ViewController::class,'homepage'])->middleware('auth');
 
-Route::get('/fetchdatamahasiswa', [MahasiswaController::class,'get'])->middleware(EnsureAdmin::class);
+Route::get('/fetchdatamahasiswa', [MahasiswaController::class, 'get'])->middleware(EnsureAdmin::class);
 Route::get('/fetchdatamatkul', [AssignedMataKuliahController::class,'get'])->middleware(EnsureAdmin::class);
 Route::get('/fetchfakultas', [FakultasController::class,'get'])->middleware(EnsureAdmin::class);
 Route::get('/fetchjurusan', [JurusanController::class,'get'])->middleware(EnsureAdmin::class);

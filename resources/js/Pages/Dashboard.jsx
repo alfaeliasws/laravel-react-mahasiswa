@@ -15,7 +15,11 @@ export default function Dashboard({user}){
     const [matkulController, setMatkulController] = useState(false);
     const [adminView, setAdminView] = useState("")
 
-    let is_admin = user.is_admin === 1 ? true : false;
+    let is_admin = user.is_admin == 1 ? true : false;
+
+    useEffect(()=>{
+        // console.log(user)
+    },[])
 
     useEffect(()=>{
         if(mahasiswaController){

@@ -50,6 +50,7 @@ export default function EditMatkulComponent({data, openEditView}){
     const fetchMataKuliah = async (id) => {
         await axios.get(`/fetchmatakuliah/${id}`).then(
             (response) => {
+                console.log(response.data.data)
                 setDataMataKuliah(response.data.data)
                 setIsBusy(false)
                 const matkul = [...response.data.data].map((item) => {

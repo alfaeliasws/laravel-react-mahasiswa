@@ -82,7 +82,6 @@ export default function Create({data}){
         fetchJurusan()
     }
 
-
     //EVENT HANDLER
     const namaHandler = (e) => {
         e.preventDefault()
@@ -180,6 +179,7 @@ export default function Create({data}){
         }
 
         axios.post("/createmahasiswa",dataSet).then((response) => {
+            console.log(response)
             setNimValidation("berhasil")
         }).catch((error)=> console.error(error.response.data.message))
     }
@@ -191,12 +191,12 @@ export default function Create({data}){
     return (
         isBusy === false ?
             <div>
-                <ContentParagraphBlack>Tambah Data Mahasiswa</ContentParagraphBlack>
                 {
                     nimValidation === "berhasil" ?
-                        <ContentParagraphBlack>Mahasiswa Berhasil Ditambahkan!</ContentParagraphBlack>
+                    <ContentParagraphBlack>Mahasiswa Berhasil Ditambahkan!</ContentParagraphBlack>
                     :
                     <form onSubmit={submitHandler}>
+                        <ContentParagraphBlack>Tambah Data Mahasiswa</ContentParagraphBlack>
                         <FormInputText onChange={namaHandler} label="Nama" placeholder="Ketik Nama" value={name}/>
                         <FormInputText label="Nomor Induk Mahasiswa" onBlur={checkValidation} onChange={idMahasiswaHandler} placeholder="Ketik NIM" value={idMahasiswa}/>
                         {nimValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">NIM Tidak Tersedia</MiniTextBlack> : <div></div>}

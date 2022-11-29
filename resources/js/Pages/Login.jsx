@@ -52,7 +52,8 @@ export default function Login(){
         })
             .then((response)=>{
                 //next redirect
-            if(response.data.status === 422)
+            console.log(response)
+            if(response.data.status === 400)
             {
                 setMessage("Credentials Doesn't Match")
                 setIsBusy(false)

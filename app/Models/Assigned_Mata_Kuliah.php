@@ -17,6 +17,7 @@ class Assigned_Mata_Kuliah extends Model
         'fakultas_id',
         'jurusan_id',
         'mata_kuliah_id',
-        'jadwal_id'
+        'jadwal_id',
+        'id'
     ];
 }

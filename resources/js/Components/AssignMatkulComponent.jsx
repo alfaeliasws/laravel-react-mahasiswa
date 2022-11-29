@@ -153,12 +153,13 @@ export default function AssignMatkulComponent(){
         e.preventDefault()
 
         const value = e.target.value
-        const checkFilter = dataMahasiswa.filter((item) => item.name === value)
+        const checkFilter = dataMahasiswa.filter((item) => item.name.toLowerCase() === value.toLowerCase())
 
         const mappedFilterJurusan = checkFilter.map((item) => {return {label: item.jurusan, value:item.jurusan_id}})
         const mappedFilterFakultas = checkFilter.map((item) => {return {label: item.fakultas, value:item.fakultas_id}})
 
         if(checkFilter.length === 1){
+            setName(checkFilter[0].name)
             setIsBusy(true)
             setSelected(checkFilter[0])
             setNameValidation("validation approved")
@@ -200,9 +201,17 @@ export default function AssignMatkulComponent(){
     const hariHandler = (e) => {
         e.preventDefault()
 
-        const passedJadwal = parseInt(e.target.value)
+        if(e.target.value === "initial value")
+        {
+            const passedJadwal = parseInt(optionHari[0].value)
+            setSelectedJadwal(passedJadwal)
+        }
+        else{
+            const passedJadwal = parseInt(e.target.value)
+            setSelectedJadwal(passedJadwal)
+        }
 
-        setSelectedJadwal(passedJadwal)
+
     }
 
     //Calling endpoint to store data
@@ -218,10 +227,10 @@ export default function AssignMatkulComponent(){
             jadwal_id: selectedJadwal
         }
 
-        axios.post("/assignmatkul",dataSet).then((response) => {
+        await axios.post("/assignmatkul",dataSet).then((response) => {
             setNameValidation("berhasil")
             setName("")
-        }).catch((error)=>console.error(error))
+        }).catch((error)=>console.error(error.response.data.message))
     }
 
     return (
@@ -292,7 +301,7 @@ export default function AssignMatkulComponent(){
                                         </div>
                                         <div className="flex flex-wrap">
                                             <label htmlFor="jadwalHariSelect" className="w-full h-min-h">Hari</label>
-                                            <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue="initial" onChange={hariHandler}>
+                                            <select id="jadwalHariSelect" className="w-full rounded-md" defaultValue={"initial"} onChange={hariHandler}>
                                                 <option value="initial">Pilih Hari</option>
                                                 {optionHari.map((item) => {
                                                     return <option value={item.key} key={item.key}>{item.label}</option>

@@ -72,7 +72,7 @@ export default function AdminDashboard({view, data}){
         if(showMatkulView && !createMatkulView && !editMatkulView){
             setMatkulView("show")
 
-        //create matkul if create
+            //create matkul if create
         }else if(createMatkulView){
             setMatkulView("create")
 
@@ -96,7 +96,6 @@ export default function AdminDashboard({view, data}){
             setEditMahasiswaView(false)
             setShowMahasiswaView(true)
             setIsBusy(false)
-            // setDataMahasiswa(response.data)
         }).catch(error => console.error(error))
     }
 
@@ -136,6 +135,7 @@ export default function AdminDashboard({view, data}){
             if(currentView == "mahasiswa") viewChanger(editMahasiswaView, setEditMahasiswaView, "boolean")
     }
 
+    //VIEW CHANGER
     function onShowView () {
             setEditMahasiswaView(false)
             setShowMahasiswaView(true)

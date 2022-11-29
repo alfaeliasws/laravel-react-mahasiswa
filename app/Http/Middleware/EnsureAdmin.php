@@ -30,7 +30,7 @@ class EnsureAdmin
             return redirect('/')->with('message',"You are not authorized");
         }
         //check if admin
-        else if($request->user()->is_admin === 1)
+        else if($request->user()->is_admin == 1)
         {
             return $next($request);
         }

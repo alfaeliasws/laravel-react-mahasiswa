@@ -15,23 +15,25 @@ class MahasiswaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function get()
-    {
-        $user_data_query = DB::table('mahasiswa as m')
-                            ->select('m.name', 'm.id', 'f.fakultas', 'm.id_mahasiswa', 'j.jurusan','m.jurusan_id','m.fakultas_id','m.semester_id as semester', 'm.nomor_telepon', 'm.alamat')
-                            ->leftJoin('fakultas as f','m.fakultas_id','=',"f.id")
-                            ->leftJoin('jurusan as j','m.jurusan_id','=',"j.id")->get();
+        public function get()
+        {
+            $user_data_query = DB::table('mahasiswa as m')
+                                ->select('m.name', 'm.id', 'f.fakultas', 'm.id_mahasiswa', 'j.jurusan','m.jurusan_id','m.fakultas_id','m.semester_id as semester', 'm.nomor_telepon', 'm.alamat')
+                                ->leftJoin('fakultas as f','m.fakultas_id','=',"f.id")
+                                ->leftJoin('jurusan as j','m.jurusan_id','=',"j.id")->get();
 
-        $nim = DB::table('users as u')->select('u.login_id')->get();
+            // $user_data_query = DB::raw('select m.name, m.id, f.fakultas, m.id_mahasiswa, j.jurusan, m.jurusan_id, m.fakultas_id, m.semester_id as semester, m.nomor_telepon, m.alamat from mahasiswa m left join fakultas f on m.fakultas_id = f.id left join jurusan j on m.jurusan_id = j.id');
 
-        return response()->json([
-            "status"=>200,
-            "message"=>"Data Fetched",
-            "data"=> $user_data_query,
-            "unique_data" => $nim
-        ]);
+            $nim = DB::table('users as u')->select('u.login_id')->get();
 
-    }
+            return response()->json([
+                "status"=>200,
+                "message"=>"Data Fetched",
+                "data"=> $user_data_query,
+                "unique_data" => $nim
+            ]);
+
+        }
 
     /**
      * Show the form for creating a new resource.
@@ -62,6 +64,14 @@ class MahasiswaController extends Controller
             "fakultas_id" => "required"
         ]);
 
+
+        $prev_id_mhs = DB::table('mahasiswa')->select('id')->latest('id')->first();
+        $id_mhs = $prev_id_mhs->id + 1;
+        $formFields["id"] = $id_mhs;
+
+        $prev_id_usr = DB::table('users')->select('id')->latest('id')->first();
+        $id_usr = $prev_id_usr->id + 1;
+
         $user_create=$request->validate([
             "id_mahasiswa" => "required",
             "password" => "required"
@@ -75,14 +85,14 @@ class MahasiswaController extends Controller
             $user->login_id = $request->id_mahasiswa;
             $user->password = Hash::make($request->password);
             $user->is_admin = 0;
+            $user->id = $id_usr;
             $user->save();
 
-            return response()->json("creation successful");
+            return response()->json($formFields);
         }
         else{
             return response()->json("error ocurred");
         }
-
 
 
     }

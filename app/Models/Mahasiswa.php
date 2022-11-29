@@ -19,5 +19,6 @@ class Mahasiswa extends Model
         'jurusan_id',
         'semester_id',
         'id_mahasiswa',
+        'id'
     ];
 }

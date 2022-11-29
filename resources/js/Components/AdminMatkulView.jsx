@@ -12,7 +12,7 @@ export default function AdminMatkulView({view, openEditView, editMatkulView}) {
         <div>
             {
                 view === "show" ?
-                <ShowMatkulComponent openEditView={openEditView} editMatkulView={editMatkulView} />
+                <ShowMatkulComponent view={view} openEditView={openEditView} editMatkulView={editMatkulView} />
                 : <AssignMatkulComponent />
             }
         </div>

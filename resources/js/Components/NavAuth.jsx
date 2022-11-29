@@ -60,7 +60,7 @@ export default function NavAuth(){
     }
 
     return (
-        <ul className="bg-blue-900 w-full sm:flex lg:space-x-[45px] py-3 pl-[20px] justify-end md:space-x-7 md:pr-7 lg:pr-20">
+        <ul className="bg-blue-900 w-full sm:flex sm:space-x-[20px] lg:space-x-[45px] py-3 pl-[20px] justify-end md:pr-7 lg:pr-20">
                 <NavItem href="/homepage" >Home</NavItem>
                 <NavItem href="/dashboard" >Dashboard</NavItem>
                 <form className="text-left" method="POST" onSubmit={submit}>
