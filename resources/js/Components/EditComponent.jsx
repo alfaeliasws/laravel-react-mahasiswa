@@ -19,10 +19,6 @@ export default function EditComponent({data}){
     const [semester, setSemester] = useState(data.semester)
     const [password, setPassword] = useState("")
 
-    useEffect(()=>{
-
-    },[])
-
     //EVENT HANDLERS
     const namaHandler = (e) => {
         e.preventDefault()
@@ -76,9 +72,11 @@ export default function EditComponent({data}){
 
     //returned data as edit form
     return (
+        //if success
         validation === "validation approved" ?
         <ContentParagraphBlack>Perbaikan Data Mahasiswa Berhasil</ContentParagraphBlack>
         :
+        //if still in process
         <div>
             <form onSubmit={submitHandler}>
                 <ContentParagraphBlack>Edit Data Mahasiswa</ContentParagraphBlack>

@@ -236,20 +236,28 @@ export default function AssignMatkulComponent(){
     return (
             <div>
                 {
+                    //checking if still fetching data
                     isBusy === false
                     ?
                     (
                         nameValidation === "berhasil" ?
+                        //if succeed
                         <ContentParagraphBlack>Penambahan Jadwal Kuliah Berhasil!</ContentParagraphBlack>
                         :
+                        //rendered if not busy and still not submitting form (render form)
                         <div>
                             <ContentParagraphBlack>Penambahan Jadwal Kuliah Mahasiswa</ContentParagraphBlack>
                             <form onSubmit={submitHandler}>
                                 <FormInputText onChange={namaHandler} onBlur={checkValidation} label="Nama" placeholder="Ketik Nama" value={name}/>
-                                {nameValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">Mahasiswa Tidak Ditemukan</MiniTextBlack> : <div></div>}
+                                {nameValidation === "validation rejected" ?
+                                    // validation failed (nim doesn't found) - additional element
+                                    <MiniTextBlack className="text-red-500">Mahasiswa Tidak Ditemukan</MiniTextBlack> :
+                                    //if found return empty div
+                                    <div></div>}
                                 {
                                     (nameValidation !== "validation approved" && selected)
                                     ?
+                                    //if nim found
                                     <div>
                                         <div className="flex flex-wrap">
                                             <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
@@ -271,6 +279,7 @@ export default function AssignMatkulComponent(){
                                         </div>
                                     </div>
                                     :
+                                    //if nim doesn't found
                                     <div>
                                         <div className="flex flex-wrap">
                                             <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
@@ -316,6 +325,7 @@ export default function AssignMatkulComponent(){
                             </div>
                     )
                     :
+                    //if still fetching data
                     <LoadingComponent/>
                 }
             </div>

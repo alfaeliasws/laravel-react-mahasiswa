@@ -35,6 +35,7 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
     //store data that will be passed for editing
     const [editedData, setEditedData] = useState([])
 
+
     //FUNCTION FETCHER
     const fetchMatkulData = async () => {
         axios.get("/fetchdatamatkul")
@@ -45,6 +46,7 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
                 setIsBusy(false)
             }).catch((error) => console.error(error))
     }
+
 
     //RENDER in dependency of the passed editMatkulView and currentView
     useEffect(()=>{
@@ -76,6 +78,8 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         setData(filtered)
     },[search])
 
+
+
     //SEARCH BAR
     useEffect(()=>{
         setModifiedData(cachedData)
@@ -91,6 +95,8 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         setData(filtered)
     },[search])
 
+
+
     //SEARCH
     const searchHandler = (e) => {
         e.preventDefault()
@@ -101,6 +107,8 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         }
 
         }
+
+
 
     //DELETE MODAL
     const deleteModalHandler = (e)=>{
@@ -114,7 +122,11 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         e.preventDefault()
 
         setDeleteModal(false)
+        fetchMatkulData()
+        setOneData("full")
+        setIsBusy(false)
     }
+
 
 
     //EVENT HANDLER
@@ -137,9 +149,13 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         .catch((error) => console.error(error))
     }
 
+
+
     //if delete function clicked
     async function onDelete (event) {
         event.preventDefault()
+
+        // console.log(event.target.value)
 
         setIsBusy(true)
         const deletedData = event.target.value
@@ -153,22 +169,29 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
         await axios.delete(`/deleterecord/${deletedData}`)
         .then((response) => {
             setDeleteModal(false)
+            fetchMatkulData()
+            setOneData("full")
             setIsBusy(false)
         }).catch(error => console.error(error))
-
     }
 
+
+    //PASSED FUNCTION TO CHILDREN
     const onShowView = (view) => {
         setCurrentView(view)
     }
 
+
+    //returned JSX
     return (
         <div className="w-full">
             {
                 !isBusy ?
                 (
+                    //if is busy false
                     deleteModal
                     ?
+                    //if deleteModal true (delete triggered)
                     <div className="w-full flex flex-wrap min-h-min">
                         <ContentParagraphBlack>Are you sure want to delete this data?</ContentParagraphBlack>
                         <button onClick={onDelete} value={deletedId} className="bg-red-600 mr-2 hover:bg-red-800 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:saturate-200 transition-all hover:text-sm">Delete</button>
@@ -177,13 +200,16 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
                     :
                     (currentView === false
                         ?
+                            //if currentView false (edit false) then show matkul
                             <div className="overflow-x-auto overflow-scroll flex flex-wrap overflow-y-auto max-h-[500px]">
-                                <div className="w-full ml-1 mb-4">
-                                    <FormInputText onChange={searchHandler} placeholder="Search record..." className="w-4/12 border-none"/>
+                                <div className="w-full ml-1 mb-4 min-h-[50px]">
+                                        <FormInputText onChange={searchHandler} placeholder="Search record..." className="w-4/12 border-none"/>
                                 </div>
                                 { oneData === "null"  ?
+                                //if data length is 0
                                 <ContentParagraphBlack>No Record</ContentParagraphBlack>
                                 :
+                                //if data length is one
                                 oneData === "one" ?
                                 <div>
                                     <ContentParagraphBlack>Nama Mahasiswa: {data[0]?.name}</ContentParagraphBlack>
@@ -195,8 +221,17 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
                                     <ContentParagraphBlack>Dosen Pengajar: {data[0]?.dosen_pengajar}</ContentParagraphBlack>
                                     <ContentParagraphBlack>Jumlah SKS: {data[0]?.jumlahsks}</ContentParagraphBlack>
                                     <ContentParagraphBlack>Target SKS: {data[0]?.target_sks}</ContentParagraphBlack>
+                                    <div className="w-full flex">
+                                        <div className="w-5/12 mr-3">
+                                            <button className="bg-blue-600 w-full text-white rounded-lg text-xs px-3 py-2 border-none shadow-whitebg-light hover:opacity-60" onClick={(e) => onEdit(e)} value={data[0].id}>Edit</button>
+                                        </div>
+                                        <div className="w-5/12 mr-2">
+                                            <button onClick={deleteModalHandler} className="w-full bg-red-600 text-white rounded-lg text-xs px-3 py-2 border-none shadow-whitebg-light hover:opacity-60" value={data[0].id}>Delete</button>
+                                        </div>
+                                    </div>
                                 </div>
                                 :
+                                //if data length is more than one
                                 (
                                 <div>
                                     <TableShowMatkul header="true" target="Target SKS" hari="Hari" waktu="Waktu" className="min-h-min bg-slate-300 py-3" nama="Nama" nim="NIM" semester="Sem" fakultas="Fakultas" jurusan="Jurusan" mataKuliah="Nama Mata Kuliah" mataKuliahId="MKID" dosenPengajar="Dosen Pengajar" jumlahSKS="Jumlah SKS"/>
@@ -210,6 +245,7 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
                             }
                             </div>
                         :
+                            //if currentView true
                             (
                                 editedData.name &&
                                 <EditMatkulComponent onShowView={onShowView} openEditView={openEditView} data={editedData}/>
@@ -217,6 +253,7 @@ export default function ShowMatkulComponent({openEditView, editMatkulView}){
                     )
                 )
                 :
+                //if isBusy true
                 <LoadingComponent/>
             }
         </div>

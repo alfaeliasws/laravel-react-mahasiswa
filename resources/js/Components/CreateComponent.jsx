@@ -189,12 +189,16 @@ export default function Create({data}){
     //return form if the data is fetched
     //return success announcement if data submission succeed
     return (
+        //check if isBusy (check if fetching data is succeed)
         isBusy === false ?
             <div>
                 {
+                    //if submit succeed
                     nimValidation === "berhasil" ?
                     <ContentParagraphBlack>Mahasiswa Berhasil Ditambahkan!</ContentParagraphBlack>
                     :
+
+                    //if adding (rendered at first)
                     <form onSubmit={submitHandler}>
                         <ContentParagraphBlack>Tambah Data Mahasiswa</ContentParagraphBlack>
                         <FormInputText onChange={namaHandler} label="Nama" placeholder="Ketik Nama" value={name}/>
@@ -202,7 +206,6 @@ export default function Create({data}){
                         {nimValidation === "validation rejected" ? <MiniTextBlack className="text-red-500">NIM Tidak Tersedia</MiniTextBlack> : <div></div>}
                         <FormInputText onChange={alamatHandler} label="Alamat" placeholder="Ketik Alamat" value={alamat}/>
                         <FormInputNumber onChange={nomorTeleponHandler} label="Nomor Telepon" placeholder="Masukkan Nomor Telepon" value={nomorTelepon}/>
-                        {/* <FormInputText label="Fakultas" value={fakultas} onChange={fakultasHandler}/> */}
                         <div className="flex flex-wrap">
                             <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
                             <select id="fakultasSelect" className="w-full rounded-md" defaultValue="initial" onFocus={refetchData} onChange={fakultasHandler}>
@@ -228,6 +231,8 @@ export default function Create({data}){
                 }
             </div>
         :
+
+        //if isBusy true (fetching data)
         <LoadingComponent/>
     )
 }

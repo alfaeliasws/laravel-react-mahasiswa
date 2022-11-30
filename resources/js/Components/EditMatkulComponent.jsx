@@ -9,11 +9,14 @@ import LoadingComponent from "./LoadingComponent";
 //Parent COMPONENT Dashboard -> AdminDashboard -> AdminMatkulView -> ShowMatkulComponent
 
 //component when edit matkul button is called
-export default function EditMatkulComponent({data, openEditView}){
+export default function EditMatkulComponent({data}){
 
     //STATE
     //isBusy true is download
     const [isBusy, setIsBusy] = useState(true);
+
+    //anchor
+    const [name, setName] = useState("")
 
     //validation
     const [validation, setValidation] = useState("empty")
@@ -50,7 +53,6 @@ export default function EditMatkulComponent({data, openEditView}){
     const fetchMataKuliah = async (id) => {
         await axios.get(`/fetchmatakuliah/${id}`).then(
             (response) => {
-                console.log(response.data.data)
                 setDataMataKuliah(response.data.data)
                 setIsBusy(false)
                 const matkul = [...response.data.data].map((item) => {
@@ -67,12 +69,10 @@ export default function EditMatkulComponent({data, openEditView}){
 
     //RENDERER AND FETCHER CALL
     useEffect(() => {
-        if(data) {
+            setName(data.name)
             setValidation("validation approved")
             fetchMataKuliah(data.jurusan_id)
-        }
-        // if(!data) openEditView("showView")
-    },[])
+    },[data])
 
 
     //EVENT HANDLER
@@ -122,16 +122,19 @@ export default function EditMatkulComponent({data, openEditView}){
     return (
             <div>
                 {
-                    isBusy === false && data.name
+                    //check isBusy (data is fetched or not)
+                    isBusy === false
                     ?
                     (
+                        //if submit success
                         validation === "berhasil" ?
                         <ContentParagraphBlack>Perbaikan Jadwal Kuliah Berhasil!</ContentParagraphBlack>
                         :
+                        //if in edit process
                         <div>
                             <ContentParagraphBlack>Perbaikan Jadwal Mahasiswa</ContentParagraphBlack>
                             <form onSubmit={submitHandler}>
-                                <FormInputText label="Nama" placeholder="Ketik Nama" value={data.name} readOnly={true}/>
+                                <FormInputText label="Nama" placeholder="Ketik Nama" value={name} readOnly={true}/>
                                 <div>
                                     <div className="flex flex-wrap">
                                         <label htmlFor="fakultasSelect" className="w-full h-min-h">Fakultas</label>
@@ -171,6 +174,7 @@ export default function EditMatkulComponent({data, openEditView}){
                             </div>
                     )
                     :
+                    // if is busy is true (fetching data)
                     <LoadingComponent/>
                 }
             </div>

@@ -150,6 +150,7 @@ export default function AdminDashboard({view, data}){
             {
                 isBusy === false ?
                 (currentView == "mahasiswa" ?
+                // if not busy and currentView is mahasiswa
                 <div>
                     <div className='w-full'>
                         <div className="flex md:flex-wrap space-x-4 py-4 px-3 md:px-0">
@@ -160,6 +161,8 @@ export default function AdminDashboard({view, data}){
                     <AdminMahasiswaView data={dataMahasiswa} view={mahasiswaView} editMahasiswaView={editMahasiswaView} openEditView={openEditView} fetchDataMahasiswa={fetchDataMahasiswa} onShowView={onShowView}/>
                 </div> :
                 currentView == "matkul" ?
+
+                // if not busy and currentView is matkul
                 <div>
                     <div className='w-full'>
                         <div className="flex flex-wrap space-x-4 py-4">
@@ -170,11 +173,15 @@ export default function AdminDashboard({view, data}){
                     <AdminMatkulView data={data} view={matkulView} editMatkulView={editMatkulView} openEditView={openEditView} />
                 </div>
                 :
+
+                //if not busy and currentView default passed from parent element
                 <div>
                     <ContentParagraphBlack>{data.user_data.name}'s Dashboard</ContentParagraphBlack>
                     <MiniTextBlack className="text-gray-500 text-sm">{data.user_data.position}</MiniTextBlack>
                     <MiniTextBlack className="text-gray-500 text-sm">{data.login_id}</MiniTextBlack>
                 </div>) :
+
+            //if busy true
             <LoadingComponent/>
         }
         </div>

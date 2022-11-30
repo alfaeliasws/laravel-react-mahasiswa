@@ -56,8 +56,9 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
         fetchDataMahasiswa()
     },[])
 
+    //conditional renderer dependent to the change of search component
     useEffect(()=>{
-        setModifiedData(cachedDataMahasiswa)
+        setModifiedData(fetchedData)
         const filtered = modifiedData.filter((item) => {
             return (
                         item.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -72,13 +73,13 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
         setDataMahasiswa(filtered)
     },[search])
 
-    //conditional renderer dependent to view, and editMahasiswaView and deleteAction
+    //conditional renderer dependent to editMahasiswaView and deleteAction
     useEffect(()=>{
+        fetchDataMahasiswa()
+        setOneData("full")
         if(deleteAction == false){
             fetchDataMahasiswa()
             setCachedDataMahasiswa(fetchedData)
-            setModifiedData(fetchedData);
-            setOneData("full");
             setIsBusy(false)
         }
     },[editMahasiswaView])
@@ -106,6 +107,9 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
         e.preventDefault()
 
         setDeleteModal(false)
+        fetchMatkulData()
+        setOneData("full")
+        setIsBusy(false)
     }
 
     //EVENT HANDLER
@@ -127,8 +131,9 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
 
         await axios.delete(`/deletemahasiswa/${deletedData}`)
         .then((response) => {
-            setIsBusy(false)
             setDeleteModal(false)
+            setOneData("full")
+            fetchDataMahasiswa()
         }).catch(error => console.error(error))
     }
 
@@ -151,6 +156,7 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
             {
                 deleteModal === true
                 ?
+                //if dataMahasiswa exists and delete modal is triggered
                 <div className="w-full flex flex-wrap min-h-min">
                     <ContentParagraphBlack>Are you sure want to delete this data?</ContentParagraphBlack>
                     <button onClick={deleteHandler} value={deletedId} className="bg-red-600 mr-2 hover:bg-red-800 text-white rounded-lg text-xs px-3 py-1 border-none shadow-whitebg-light hover:saturate-200 transition-all hover:text-sm">Delete</button>
@@ -158,16 +164,19 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
                 </div>
                 :
                 ( editMahasiswaView === false  ?
+                    //if editMahasiswaView is false (render show array)
                     <div className="w-full flex flex-wrap">
                         <div className="w-full ml-1 mb-4">
                             <FormInputText onChange={searchHandler} placeholder="Search record..." className="w-4/12 border-none"/>
                         </div>
                     {
                         oneData === "null" ?
+                        //if there is no data
                         <div>
                             <ContentParagraphBlack>No Record</ContentParagraphBlack>
                         </div>
                         :
+                        //if there is only one data
                         oneData === "one" ?
                         <div>
                             <ContentParagraphBlack>Nama Mahasiswa: {dataMahasiswa[0]?.name}</ContentParagraphBlack>
@@ -177,9 +186,17 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
                             <ContentParagraphBlack>{dataMahasiswa[0]?.fakultas}</ContentParagraphBlack>
                             <ContentParagraphBlack>{dataMahasiswa[0]?.jurusan}</ContentParagraphBlack>
                             <ContentParagraphBlack>Semester {dataMahasiswa[0]?.semester}</ContentParagraphBlack>
+                            <div className="w-full flex">
+                                <div className="w-5/12 mr-3">
+                                    <button className="bg-blue-600 w-full text-white rounded-lg text-xs px-3 py-2 border-none shadow-whitebg-light hover:opacity-60" onClick={editHandler(dataMahasiswa[0])} value={dataMahasiswa[0].id}>Edit</button>
+                                </div>
+                                <div className="w-5/12 mr-2">
+                                    <button onClick={deleteModalHandler} className="w-full bg-red-600 text-white rounded-lg text-xs px-3 py-2 border-none shadow-whitebg-light hover:opacity-60" value={dataMahasiswa[0].id}>Delete</button>
+                                </div>
+                            </div>
                         </div>
                         :
-                        // <div></div>
+                        // if there is many data
                         dataMahasiswa.map((item,i) => {
                             return (
                                 <div className="w-full lg:w-1/5 md:w-4/12 " key={item.id}>
@@ -202,10 +219,13 @@ export default function ShowComponent({ openEditView, editMahasiswaView, onShowV
                     }
                     </div>
                 :
+                // if editMahasiswaView true
                 <EditComponent  data={editPassedData} onShowView={onShowView} view={editMahasiswaView}/>
                 )
             }
-            </div> :
-            <LoadingComponent></LoadingComponent>
+            </div>
+            :
+            //if isBusyis true
+            <LoadingComponent/>
         )
 }
