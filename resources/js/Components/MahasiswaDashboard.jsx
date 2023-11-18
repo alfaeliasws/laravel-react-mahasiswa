@@ -54,6 +54,10 @@ export default function MahasiswaDashboard({data}){
         .catch((error) => console.error(error.response.data))
     }
 
+useEffect(()=>{
+    console.log(dataUser)
+},[])
+
     //RENDERER if there is any changes in state
     useEffect(() => {
         fetchAll(data.login_id)

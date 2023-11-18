@@ -211,7 +211,6 @@ export default function AssignMatkulComponent(){
             setSelectedJadwal(passedJadwal)
         }
 
-
     }
 
     //Calling endpoint to store data

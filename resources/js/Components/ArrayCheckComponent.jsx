@@ -19,7 +19,7 @@ export default function ArrayCheckComponent(passedState)
                             return (
                                 <div className="mb-3" key={item.id}>
                                     <ContentParagraphBlackMedium className="font-bold">{item.mata_kuliah} - {item.mata_kuliah_id}</ContentParagraphBlackMedium>
-                                    <ContentParagraphBlackSmall >Jumlah SKS - {item.jumlahSKS}</ContentParagraphBlackSmall>
+                                    <ContentParagraphBlackSmall >Jumlah SKS - {item.jumlahsks}</ContentParagraphBlackSmall>
                                     <ContentParagraphBlackSmall >Target SKS - {item.target_sks}</ContentParagraphBlackSmall>
                                     <ContentParagraphBlackSmall >{item.waktu}</ContentParagraphBlackSmall>
                                     <ContentParagraphBlackSmall >Dosen Pengajar - {item.dosen_pengajar}</ContentParagraphBlackSmall>
